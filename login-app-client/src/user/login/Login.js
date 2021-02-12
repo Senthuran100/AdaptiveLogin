@@ -15,7 +15,12 @@ const browser = detect();
 const FormItem = Form.Item;
 let maxSpeed = 0, prevSpeed = 0, speed = 0, maxPositiveAcc = 0, maxNegativeAcc = 0;
 let prevEvent, currentEvent
-
+let dwellTimes = {};
+let dwellTimesArray = []
+let start = null
+let flightTimesArray = []
+let startTime = null
+let upDownTimeArray = []
 class Login extends Component {
 
     render() {
@@ -82,7 +87,7 @@ class LoginForm extends Component {
                 } else {
                     maxNegativeAcc = Math.round(acceleration < maxNegativeAcc ? (maxNegativeAcc = acceleration) : maxNegativeAcc);
                 }
-                console.log('maxPositiveAcc', maxPositiveAcc, maxNegativeAcc);
+                // console.log('maxPositiveAcc', maxPositiveAcc, maxNegativeAcc);
             }
             prevEvent = currentEvent
             prevSpeed = speed;
@@ -93,17 +98,39 @@ class LoginForm extends Component {
         console.log('e', e);
         console.log('e1', e.which);
         console.log('e2', e.timeStamp);
-        console.log('e3', e.location);
-        console.log('e4', e.detail);
         console.log(e.key);
+        if (!dwellTimes[e.which])
+            dwellTimes[e.which] = new Date().getTime();
+        if(!start){
+            start = new Date().getTime();
+        } else {
+            let flighttime = new Date().getTime() - start;
+            start = null
+            flightTimesArray.push({"key":e.key,"flightTime":flighttime})
+            console.log('Flight Time for key',flightTimesArray);
+        }
+        if(startTime){
+            let upDownTime = new Date().getTime() - startTime;
+            startTime = null;
+            upDownTimeArray.push({'key':e.key,'upDownTime':upDownTime})
+            console.log('upDownTimeArray',upDownTimeArray);
+        }
     }
     onKeyRelease(e) {
         console.log('eww', e);
         console.log('e1w', e.which);
         console.log('e2w', e.timeStamp);
-        console.log('e3w', e.location);
-        console.log('e4w', e.detail);
+        
         console.log(e.key);
+        let dwellTime = new Date().getTime() - dwellTimes[e.which];
+
+        dwellTimesArray.push({"key":e.key,"dwellTime":dwellTime})
+        delete dwellTimes[e.which];
+        console.log('key Pressed',e.key,'for ',dwellTime);
+        console.log('dwellTimesArray', dwellTimesArray);
+        if(!startTime){
+            startTime = new Date().getTime()
+        }
     }
 
 
@@ -129,7 +156,13 @@ class LoginForm extends Component {
                     "maxSpeed":maxSpeed, 
                     ...this.props.mouseObject()
                 }
+                const keyBoardEvent = {
+                    "dwellTimesArray":dwellTimesArray,
+                    "flightTimesArray":flightTimesArray,
+                    "upDownTimeArray":upDownTimeArray
+                }
                 values.mouseEvent = mouseEvent
+                values.keyBoardEvent = keyBoardEvent
                 const loginRequest = Object.assign({}, values);
                 console.log('values', loginRequest);
                 login(loginRequest)
