@@ -4,11 +4,13 @@ import com.example.login.exception.AppException;
 import com.example.login.model.Role;
 import com.example.login.model.RoleName;
 import com.example.login.model.User;
+import com.example.login.model.UserLoginParam;
 import com.example.login.payload.ApiResponse;
 import com.example.login.payload.JwtAuthenticationResponse;
 import com.example.login.payload.LoginRequest;
 import com.example.login.payload.SignUpRequest;
 import com.example.login.repository.RoleRepository;
+import com.example.login.repository.UserLoginParamRepo;
 import com.example.login.repository.UserRepository;
 import com.example.login.security.JwtTokenProvider;
 
@@ -31,6 +33,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Collections;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -53,10 +56,16 @@ public class AuthController {
     @Autowired
     JwtTokenProvider tokenProvider;
 
+    @Autowired
+    UserLoginParamRepo userLoginParamRepo;
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         logger.info("--- loginRequest browser ----"+loginRequest.getBrowser());
         logger.info("--- loginRequest location ---"+loginRequest.getLocation());
+        logger.info("--- loginRequest mouseEvent ---"+loginRequest.getMouseEvent());
+        logger.info("--- loginRequest keyBoardEvent ---"+loginRequest.getKeyBoardEvent());
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsernameOrEmail(),
@@ -65,8 +74,17 @@ public class AuthController {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         String jwt = tokenProvider.generateToken(authentication);
+
+        if(userRepository.existsByUsername(loginRequest.getUsernameOrEmail()) || userRepository.existsByEmail(loginRequest.getUsernameOrEmail())) {
+            Date date = new Date(System.currentTimeMillis());
+            // creating userLoginEvent Param
+            UserLoginParam userLoginParam= new UserLoginParam(loginRequest.getUsernameOrEmail(),date,loginRequest.getBrowser().toString(),
+                    loginRequest.getLocation().toString(),loginRequest.getMouseEvent().toString(),loginRequest.getKeyBoardEvent().toString());
+            userLoginParamRepo.save(userLoginParam);
+            return ResponseEntity.ok(new JwtAuthenticationResponse(jwt,"Event is Stored"));
+        }
+
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
     }
 

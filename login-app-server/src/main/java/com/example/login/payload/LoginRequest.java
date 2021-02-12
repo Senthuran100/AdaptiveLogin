@@ -14,6 +14,10 @@ public class LoginRequest {
 
     private Object location;
 
+    private Object mouseEvent;
+
+    private Object keyBoardEvent;
+
     public String getUsernameOrEmail() {
         return usernameOrEmail;
     }
@@ -44,5 +48,21 @@ public class LoginRequest {
 
     public void setLocation(Object location) {
         this.location = location;
+    }
+
+    public Object getMouseEvent() {
+        return mouseEvent;
+    }
+
+    public void setMouseEvent(Object mouseEvent) {
+        this.mouseEvent = mouseEvent;
+    }
+
+    public Object getKeyBoardEvent() {
+        return keyBoardEvent;
+    }
+
+    public void setKeyBoardEvent(Object keyBoardEvent) {
+        this.keyBoardEvent = keyBoardEvent;
     }
 }
