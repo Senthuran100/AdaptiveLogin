@@ -23,6 +23,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -77,9 +78,12 @@ public class AuthController {
         String jwt = tokenProvider.generateToken(authentication);
 
         if(userRepository.existsByUsername(loginRequest.getUsernameOrEmail()) || userRepository.existsByEmail(loginRequest.getUsernameOrEmail())) {
+            User user = userRepository.findByUsernameOrEmail(loginRequest.getUsernameOrEmail(), loginRequest.getUsernameOrEmail())
+                    .orElseThrow(() ->
+                                    new UsernameNotFoundException("User not found with username or email : " + loginRequest.getUsernameOrEmail()));
             Date date = new Date(System.currentTimeMillis());
             // creating userLoginEvent Param
-            UserLoginParam userLoginParam= new UserLoginParam(loginRequest.getUsernameOrEmail(),date,loginRequest.getBrowser().toString(),
+            UserLoginParam userLoginParam= new UserLoginParam(user.getUsername(),date,loginRequest.getBrowser().toString(),
                     loginRequest.getLocation().toString(),loginRequest.getMouseEvent().toString(),loginRequest.getKeyBoardEvent().toString());
             userLoginParamRepo.save(userLoginParam);
             return ResponseEntity.ok(new JwtAuthenticationResponse(jwt,"Event is Stored"));

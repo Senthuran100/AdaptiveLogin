@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://192.168.1.8:5000/api';
+export const API_BASE_URL = 'http://192.168.1.102:5000/api';
 
 export const ACCESS_TOKEN = 'accessToken';
 
