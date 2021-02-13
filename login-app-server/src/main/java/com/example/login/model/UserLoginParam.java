@@ -16,7 +16,7 @@ public class UserLoginParam {
     private Long id;
 
     @NotBlank
-    @Size(max = 15)
+    @Size(max = 50)
     private String username;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -35,7 +35,7 @@ public class UserLoginParam {
     @Column(columnDefinition = "TEXT")
     private String keyboardevent;
 
-    public UserLoginParam(@NotBlank @Size(max = 15) String username, Date datetime, String browser, String location,
+    public UserLoginParam(@NotBlank @Size(max = 50) String username, Date datetime, String browser, String location,
                           String mouseevent, String keyboardevent) {
         this.username = username;
         this.datetime = datetime;

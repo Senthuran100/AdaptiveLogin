@@ -88,7 +88,7 @@ class App extends Component {
     totalY += Math.abs(event.movementY)
     console.log('event', event.type, totalX, totalY, total);
     console.log('date', (Date.now() - timestamp) / 1000);
-    let timediff = (Date.now() - timestamp)
+    // let timediff = (Date.now() - timestamp)
 
     if (event.type === "mousedown") {
       mouseDown++;
