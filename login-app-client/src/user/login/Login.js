@@ -6,8 +6,10 @@ import { ACCESS_TOKEN } from '../../constants';
 import 'antd/dist/antd.css';
 import { Form, Input, Button, Icon, notification } from 'antd';
 // const MacAddress = require('get-mac-address');
-import ClientJS from 'clientjs';
-const client = new ClientJS();
+// import ClientJS from 'clientjs';
+// const client = new ClientJS();
+// window.UAParser = UaParser;
+// const client = new ClientJS();
 const windowClient = new window.ClientJS();
 
 const { detect } = require('detect-browser');
@@ -50,11 +52,13 @@ class LoginForm extends Component {
     }
 
     componentDidMount() {
-        console.log('Mac', client.getBrowser(), windowClient.getUserAgent(), windowClient.getPlugins(),
+        console.log('Mac', windowClient.getUserAgent(), windowClient.getPlugins(),
             windowClient.getTimeZone(), windowClient.getCanvasPrint(), windowClient.getFonts(), windowClient.getMimeTypes(),
-            windowClient.getCPU());
+            windowClient.getCPU(),windowClient.getDevice(),windowClient.getSoftwareVersion(),windowClient.getAvailableResolution(),windowClient.getCanvasPrint(),
+            windowClient.getFingerprint(),windowClient.isLocalStorage(),windowClient.getSilverlightVersion(),windowClient.getDeviceType(),windowClient.getDevice()
+            ,windowClient.getDeviceVendor());
         console.log('windowClient', windowClient);
-        console.log('client', client);
+        // console.log('client', client);
         fetch(
             "https://geolocation-db.com/json/0f761a30-fe14-11e9-b59f-e53803842572"
         )

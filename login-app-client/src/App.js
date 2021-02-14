@@ -22,7 +22,7 @@ let leftClick = 0;
 let mouseDown = 0;
 let mouseUp = 0;
 let mouseObject
-let timestamp = Date.now();
+// let timestamp = Date.now();
 class App extends Component {
 
 
@@ -86,24 +86,24 @@ class App extends Component {
     total += Math.sqrt(Math.abs(event.movementX) * Math.abs(event.movementX) + Math.abs(event.movementY) * Math.abs(event.movementY))
     totalX += Math.abs(event.movementX);
     totalY += Math.abs(event.movementY)
-    console.log('event', event.type, totalX, totalY, total);
-    console.log('date', (Date.now() - timestamp) / 1000);
+    // console.log('event', event.type, totalX, totalY, total);
+    // console.log('date', (Date.now() - timestamp) / 1000);
     // let timediff = (Date.now() - timestamp)
 
     if (event.type === "mousedown") {
       mouseDown++;
-      console.log('mousedown');
+      // console.log('mousedown');
     }
     else if (event.type === "mouseup") {
       mouseUp++;
-      console.log('mouseup');
+      // console.log('mouseup');
     }
     if (event.nativeEvent.which === 1) {
       leftClick++;
-      console.log('Left click');
+      // console.log('Left click');
     } else if (event.nativeEvent.which === 3) {
       rightClick++;
-      console.log('Right click');
+      // console.log('Right click');
     }
 
     mouseObject = {
