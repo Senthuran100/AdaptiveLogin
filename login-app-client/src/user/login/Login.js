@@ -6,8 +6,8 @@ import { ACCESS_TOKEN } from '../../constants';
 import 'antd/dist/antd.css';
 import { Form, Input, Button, Icon, notification } from 'antd';
 // const MacAddress = require('get-mac-address');
-// import ClientJS from 'clientjs';
-// const client = new ClientJS();
+import ClientJS from 'clientjs';
+const client = new ClientJS();
 // window.UAParser = UaParser;
 // const client = new ClientJS();
 const windowClient = new window.ClientJS();
@@ -23,6 +23,7 @@ let start = null
 let flightTimesArray = []
 let startTime = null
 let upDownTimeArray = []
+let browserInfo = {}
 class Login extends Component {
 
     render() {
@@ -52,13 +53,14 @@ class LoginForm extends Component {
     }
 
     componentDidMount() {
-        console.log('Mac', windowClient.getUserAgent(), windowClient.getPlugins(),
+        console.log('Mac', windowClient.getUserAgentLowerCase(), windowClient.getPlugins(),
             windowClient.getTimeZone(), windowClient.getCanvasPrint(), windowClient.getFonts(), windowClient.getMimeTypes(),
             windowClient.getCPU(),windowClient.getDevice(),windowClient.getSoftwareVersion(),windowClient.getAvailableResolution(),windowClient.getCanvasPrint(),
             windowClient.getFingerprint(),windowClient.isLocalStorage(),windowClient.getSilverlightVersion(),windowClient.getDeviceType(),windowClient.getDevice()
-            ,windowClient.getDeviceVendor());
+            ,windowClient.getDeviceVendor(), windowClient.getColorDepth(), windowClient.getCurrentResolution(), windowClient.isFlash(), windowClient.getMimeTypes(),
+            windowClient.isMimeTypes()
+            );
         console.log('windowClient', windowClient);
-        // console.log('client', client);
         fetch(
             "https://geolocation-db.com/json/0f761a30-fe14-11e9-b59f-e53803842572"
         )
@@ -96,6 +98,15 @@ class LoginForm extends Component {
             prevEvent = currentEvent
             prevSpeed = speed;
         }, 100);
+
+        browserInfo = {
+            "UserAgent":windowClient.getUserAgentLowerCase(),"Plugins": windowClient.getPlugins(),
+            "TimeZone":windowClient.getTimeZone(),"CanvasPrint":windowClient.getCanvasPrint(),
+            "Fonts": windowClient.getFonts(), "MimeTypes":windowClient.getMimeTypes(),
+            "CPU":windowClient.getCPU(),"Device":windowClient.getDevice(), "browser":windowClient.getBrowser(),
+            "SoftwareVersion":windowClient.getSoftwareVersion(), "Resolution":windowClient.getAvailableResolution(),
+            "CanvasPrint":windowClient.getCanvasPrint(), "ColorDepth":windowClient.getColorDepth()
+        }
     }
 
     onKeyPressed(e) {
@@ -167,6 +178,7 @@ class LoginForm extends Component {
                 }
                 values.mouseEvent = mouseEvent
                 values.keyBoardEvent = keyBoardEvent
+                values.browserInfo = browserInfo
                 const loginRequest = Object.assign({}, values);
                 console.log('values', loginRequest);
                 login(loginRequest)

@@ -84,7 +84,7 @@ public class AuthController {
             Date date = new Date(System.currentTimeMillis());
             // creating userLoginEvent Param
             UserLoginParam userLoginParam= new UserLoginParam(user.getUsername(),date,loginRequest.getBrowser().toString(),
-                    loginRequest.getLocation().toString(),loginRequest.getMouseEvent().toString(),loginRequest.getKeyBoardEvent().toString());
+                    loginRequest.getLocation().toString(),loginRequest.getMouseEvent().toString(),loginRequest.getKeyBoardEvent().toString(),loginRequest.getBrowserInfo().toString());
             userLoginParamRepo.save(userLoginParam);
             return ResponseEntity.ok(new JwtAuthenticationResponse(jwt,"Event is Stored"));
         }

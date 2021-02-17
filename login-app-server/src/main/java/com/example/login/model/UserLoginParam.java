@@ -35,14 +35,17 @@ public class UserLoginParam {
     @Column(columnDefinition = "TEXT")
     private String keyboardevent;
 
+    @Column(columnDefinition = "TEXT")
+    private String browserInfo;
     public UserLoginParam(@NotBlank @Size(max = 50) String username, Date datetime, String browser, String location,
-                          String mouseevent, String keyboardevent) {
+                          String mouseevent, String keyboardevent, String browserInfo) {
         this.username = username;
         this.datetime = datetime;
         this.browser = browser;
         this.location = location;
         this.mouseevent = mouseevent;
         this.keyboardevent = keyboardevent;
+        this.browserInfo = browserInfo;
     }
 
     public String getUsername() {
@@ -91,5 +94,13 @@ public class UserLoginParam {
 
     public void setKeyboardevent(String keyboardevent) {
         this.keyboardevent = keyboardevent;
+    }
+
+    public String getBrowserInfo() {
+        return browserInfo;
+    }
+
+    public void setBrowserInfo(String browserInfo) {
+        this.browserInfo = browserInfo;
     }
 }
