@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { getUserProfile } from '../../util/APIUtils';
-
+import _ from 'lodash';
 import { formatDate } from '../../util/Helpers';
 import LoadingIndicator  from '../../common/LoadingIndicator';
 import './Profile.css';
 import NotFound from '../../common/NotFound';
 import CheckAuthentication from '../../common/CheckAuthentication';
 import ServerError from '../../common/ServerError';
+import { ACCESS_TOKEN } from '../../constants';
 class Profile extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +18,7 @@ class Profile extends Component {
     }
 
     loadUserProfile(username) {
-        if(this.props.username !== null){ 
+        if(username !== null){ 
         this.setState({
             isLoading: true
         });
@@ -67,7 +68,7 @@ class Profile extends Component {
         if(this.state.serverError) {
             return <ServerError />;
         }
-        if(!this.props.isAuthenticated) {
+        if(_.isEmpty(localStorage.getItem(ACCESS_TOKEN))) {
             return <CheckAuthentication {...this.props}/>
         }
 

@@ -46,6 +46,23 @@ class App extends Component {
     });
 
   }
+  componentDidMount(){
+    console.log('jjj')
+    if(localStorage.getItem('user') && localStorage.getItem(ACCESS_TOKEN)){
+      console.log(JSON.parse(localStorage.getItem('user')));
+      this.setState({
+        currentUser: JSON.parse(localStorage.getItem('user')),
+        isAuthenticated: true,
+        isLoading: false
+      });
+    } else {
+      this.setState({
+        currentUser: null,
+        isAuthenticated: false,
+      });
+    }
+  }
+
   loadCurrentUser() {
     this.setState({
       isLoading: true
@@ -69,7 +86,7 @@ class App extends Component {
 
   handleLogout(redirectTo = "/login", notificationType = "success", description = "You're successfully logged out.") {
     localStorage.removeItem(ACCESS_TOKEN);
-
+    localStorage.removeItem('user')
     this.setState({
       currentUser: null,
       isAuthenticated: false
