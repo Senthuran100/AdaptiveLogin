@@ -6,6 +6,7 @@ import ServerError from './common/ServerError';
 import CheckAuthentication from './common/CheckAuthentication';
 import { ACCESS_TOKEN } from './constants';
 import _ from 'lodash';
+import { Card, Divider, Tag } from 'antd';
 
 class LoginHome extends Component {
     constructor(props) {
@@ -25,7 +26,7 @@ class LoginHome extends Component {
             console.log('username', username);
             getUserProfile(username)
                 .then(response => {
-                    localStorage.setItem("user",JSON.stringify(response));
+                    localStorage.setItem("user", JSON.stringify(response));
                     _this.setState({
                         user: response,
                         isLoading: false
@@ -72,17 +73,32 @@ class LoginHome extends Component {
         if (this.state.serverError) {
             return <ServerError />;
         }
-        if(_.isEmpty(localStorage.getItem(ACCESS_TOKEN) )) {
-            return <CheckAuthentication {...this.props}/>
+        if (_.isEmpty(localStorage.getItem(ACCESS_TOKEN))) {
+            return <CheckAuthentication {...this.props} />
         }
 
         return (
             <div className="App-content">
                 {
                     this.state.user ? (
-                        <div>
-                            login access home
-                        </div>
+                        <React.Fragment>
+                            <Tag color="green" style={{"padding":"10px"}}>You are logged in as <b>{this.state.user.name}</b></Tag>
+                            <Divider orientation="left"></Divider>
+                            <Card title="Default size card" style={{ 'width': '100%' }}>
+                                <p>Card content</p>
+                                <p>Card content</p>
+                                <p>Card content</p>
+                                <p>Card content</p>
+                            </Card>
+                            <Divider orientation="left"></Divider>
+
+                            <Card title="Default size card" style={{ 'width': '100%' }}>
+                                <p>Card content</p>
+                                <p>Card content</p>
+                                <p>Card content</p>
+                                <p>Card content</p>
+                            </Card>
+                        </React.Fragment>
                     ) : null
                 }
             </div>

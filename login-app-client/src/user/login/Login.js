@@ -33,7 +33,7 @@ class Login extends Component {
             <div className="login-container" >
                 <h1 className="page-title">Login</h1>
                 <div className="login-content">
-                    <AntWrappedLoginForm onLogin={this.props.onLogin} mouseObject={this.props.mouseObject}/>
+                    <AntWrappedLoginForm onLogin={this.props.onLogin} mouseObject={this.props.mouseObject} />
                 </div>
             </div>
         );
@@ -55,11 +55,11 @@ class LoginForm extends Component {
     componentDidMount() {
         console.log('Mac', windowClient.getUserAgentLowerCase(), windowClient.getPlugins(),
             windowClient.getTimeZone(), windowClient.getCanvasPrint(), windowClient.getFonts(), windowClient.getMimeTypes(),
-            windowClient.getCPU(),windowClient.getDevice(),windowClient.getSoftwareVersion(),windowClient.getAvailableResolution(),windowClient.getCanvasPrint(),
-            windowClient.getFingerprint(),windowClient.isLocalStorage(),windowClient.getSilverlightVersion(),windowClient.getDeviceType(),windowClient.getDevice()
-            ,windowClient.getDeviceVendor(), windowClient.getColorDepth(), windowClient.getCurrentResolution(), windowClient.isFlash(), windowClient.getMimeTypes(),
+            windowClient.getCPU(), windowClient.getDevice(), windowClient.getSoftwareVersion(), windowClient.getAvailableResolution(), windowClient.getCanvasPrint(),
+            windowClient.getFingerprint(), windowClient.isLocalStorage(), windowClient.getSilverlightVersion(), windowClient.getDeviceType(), windowClient.getDevice()
+            , windowClient.getDeviceVendor(), windowClient.getColorDepth(), windowClient.getCurrentResolution(), windowClient.isFlash(), windowClient.getMimeTypes(),
             windowClient.isMimeTypes()
-            );
+        );
         console.log('windowClient', windowClient);
         fetch(
             "https://geolocation-db.com/json/0f761a30-fe14-11e9-b59f-e53803842572"
@@ -100,12 +100,12 @@ class LoginForm extends Component {
         }, 100);
 
         browserInfo = {
-            "UserAgent":windowClient.getUserAgentLowerCase(),"Plugins": windowClient.getPlugins(),
-            "TimeZone":windowClient.getTimeZone(),"CanvasPrint":windowClient.getCanvasPrint(),
-            "Fonts": windowClient.getFonts(), "MimeTypes":windowClient.getMimeTypes(),
-            "CPU":windowClient.getCPU(),"Device":windowClient.getDevice(), "browser":windowClient.getBrowser(),
-            "SoftwareVersion":windowClient.getSoftwareVersion(), "Resolution":windowClient.getAvailableResolution(),
-            "CanvasPrint":windowClient.getCanvasPrint(), "ColorDepth":windowClient.getColorDepth()
+            "UserAgent": windowClient.getUserAgentLowerCase(), "Plugins": windowClient.getPlugins(),
+            "TimeZone": windowClient.getTimeZone(), "CanvasPrint": windowClient.getCanvasPrint(),
+            "Fonts": windowClient.getFonts(), "MimeTypes": windowClient.getMimeTypes(),
+            "CPU": windowClient.getCPU(), "Device": windowClient.getDevice(), "browser": windowClient.getBrowser(),
+            "SoftwareVersion": windowClient.getSoftwareVersion(), "Resolution": windowClient.getAvailableResolution(),
+            "CanvasPrint": windowClient.getCanvasPrint(), "ColorDepth": windowClient.getColorDepth()
         }
     }
 
@@ -116,34 +116,34 @@ class LoginForm extends Component {
         console.log(e.key);
         if (!dwellTimes[e.which])
             dwellTimes[e.which] = new Date().getTime();
-        if(!start){
+        if (!start) {
             start = new Date().getTime();
         } else {
             let flighttime = new Date().getTime() - start;
             start = null
-            flightTimesArray.push({"key":e.key,"flightTime":flighttime})
-            console.log('Flight Time for key',flightTimesArray);
+            flightTimesArray.push({ "key": e.key, "flightTime": flighttime })
+            console.log('Flight Time for key', flightTimesArray);
         }
-        if(startTime){
+        if (startTime) {
             let upDownTime = new Date().getTime() - startTime;
             startTime = null;
-            upDownTimeArray.push({'key':e.key,'upDownTime':upDownTime})
-            console.log('upDownTimeArray',upDownTimeArray);
+            upDownTimeArray.push({ 'key': e.key, 'upDownTime': upDownTime })
+            console.log('upDownTimeArray', upDownTimeArray);
         }
     }
     onKeyRelease(e) {
         console.log('eww', e);
         console.log('e1w', e.which);
         console.log('e2w', e.timeStamp);
-        
+
         console.log(e.key);
         let dwellTime = new Date().getTime() - dwellTimes[e.which];
 
-        dwellTimesArray.push({"key":e.key,"dwellTime":dwellTime})
+        dwellTimesArray.push({ "key": e.key, "dwellTime": dwellTime })
         delete dwellTimes[e.which];
-        console.log('key Pressed',e.key,'for ',dwellTime);
+        console.log('key Pressed', e.key, 'for ', dwellTime);
         console.log('dwellTimesArray', dwellTimesArray);
-        if(!startTime){
+        if (!startTime) {
             startTime = new Date().getTime()
         }
     }
@@ -164,17 +164,17 @@ class LoginForm extends Component {
                     values.browser = browser;
                     values.location = this.state.details;
                 }
-                console.log('senthuran',this.props.mouseObject());
-                const mouseEvent= {
-                    "maxPositiveAcc":maxPositiveAcc,
-                    "maxNegativeAcc":maxNegativeAcc,
-                    "maxSpeed":maxSpeed, 
+                console.log('senthuran', this.props.mouseObject());
+                const mouseEvent = {
+                    "maxPositiveAcc": maxPositiveAcc,
+                    "maxNegativeAcc": maxNegativeAcc,
+                    "maxSpeed": maxSpeed,
                     ...this.props.mouseObject()
                 }
                 const keyBoardEvent = {
-                    "dwellTimesArray":dwellTimesArray,
-                    "flightTimesArray":flightTimesArray,
-                    "upDownTimeArray":upDownTimeArray
+                    "dwellTimesArray": dwellTimesArray,
+                    "flightTimesArray": flightTimesArray,
+                    "upDownTimeArray": upDownTimeArray
                 }
                 values.mouseEvent = mouseEvent
                 values.keyBoardEvent = keyBoardEvent
@@ -217,7 +217,8 @@ class LoginForm extends Component {
                             placeholder="Username or Email"
                             onKeyDown={this.onKeyPressed}
                             onKeyUp={this.onKeyRelease}
-                            style={{"width":"500px"}}
+                            style={{ "width": "500px" }}
+                            autocomplete="off"
                         />
                     )}
                 </FormItem>
@@ -233,12 +234,13 @@ class LoginForm extends Component {
                             placeholder="Password"
                             onKeyDown={this.onKeyPressed}
                             onKeyUp={this.onKeyRelease}
-                            style={{"width":"500px"}}
+                            style={{ "width": "500px" }}
+                            autocomplete="off"
                         />
                     )}
                 </FormItem>
                 <FormItem>
-                    <Button type="primary" htmlType="submit" size="large" className="login-form-button" style={{"width":"500px"}}>Login</Button>
+                    <Button type="primary" htmlType="submit" size="large" className="login-form-button" style={{ "width": "500px" }}>Login</Button>
                     Or <Link to="/signup">register now!!!</Link>
                 </FormItem>
             </Form>
