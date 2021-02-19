@@ -10,7 +10,8 @@ import { getCurrentUser } from './util/APIUtils';
 import {
   Route,
   withRouter,
-  Switch
+  Switch,
+  Redirect
 } from 'react-router-dom';
 import { Layout, notification } from 'antd';
 const { Content } = Layout;
@@ -152,6 +153,9 @@ class App extends Component {
               <Route path="/signup" component={Signup}></Route>
               <Route path="/users/:username"
                 render={(props) => <Profile isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
+              </Route>
+              <Route exact path="/*">
+                <Redirect to="/login" />
               </Route>
             </Switch>
           </div>

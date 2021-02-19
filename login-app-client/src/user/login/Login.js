@@ -217,6 +217,7 @@ class LoginForm extends Component {
                             placeholder="Username or Email"
                             onKeyDown={this.onKeyPressed}
                             onKeyUp={this.onKeyRelease}
+                            style={{"width":"500px"}}
                         />
                     )}
                 </FormItem>
@@ -232,12 +233,13 @@ class LoginForm extends Component {
                             placeholder="Password"
                             onKeyDown={this.onKeyPressed}
                             onKeyUp={this.onKeyRelease}
+                            style={{"width":"500px"}}
                         />
                     )}
                 </FormItem>
                 <FormItem>
-                    <Button type="primary" htmlType="submit" size="large" className="login-form-button">Login</Button>
-                    Or <Link to="/signup">register now!</Link>
+                    <Button type="primary" htmlType="submit" size="large" className="login-form-button" style={{"width":"500px"}}>Login</Button>
+                    Or <Link to="/signup">register now!!!</Link>
                 </FormItem>
             </Form>
         );
