@@ -50,7 +50,7 @@ class AppHeader extends Component {
             <Header className="app-header">
             <div className="container">
               <div className="app-title" >
-                <Link to="/">Adaptive Authentication v1.0.0</Link>
+                <p style={{"fontSize":"20px", "color":"white","fontFamily":"inherit"}}><b>Adaptive Authentication v1.0.0</b></p>
               </div>
               <Menu
                 className="app-menu"
