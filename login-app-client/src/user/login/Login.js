@@ -5,12 +5,13 @@ import { Link } from 'react-router-dom';
 import { ACCESS_TOKEN } from '../../constants';
 import 'antd/dist/antd.css';
 import { Form, Input, Button, Icon, notification } from 'antd';
-// const MacAddress = require('get-mac-address');
+// import bin2hex from 'bin2hex';
 import ClientJS from 'clientjs';
 const client = new ClientJS();
 // window.UAParser = UaParser;
 // const client = new ClientJS();
 const windowClient = new window.ClientJS();
+const stringHash = require("string-hash");
 
 const { detect } = require('detect-browser');
 const browser = detect();
@@ -50,6 +51,24 @@ class LoginForm extends Component {
             isLoading: false,
             details: null
         }
+    }
+
+    canvasFingerPrint = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const txt = 'ADAPTIVE_AUTHENTICATION';
+        ctx.textBaseline = "top";
+        ctx.font = "14px 'Arial'";
+        ctx.textBaseline = "alphabetic";
+        ctx.rotate(.05);
+        ctx.fillStyle = "#f60";
+        ctx.fillRect(125, 1, 62, 20);
+        ctx.fillStyle = "#069";
+        ctx.fillText(txt, 2, 15);
+        ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
+        ctx.fillText(txt, 4, 17);
+
+        return stringHash(canvas.toDataURL());
     }
 
     componentDidMount() {
@@ -107,6 +126,12 @@ class LoginForm extends Component {
             "SoftwareVersion": windowClient.getSoftwareVersion(), "Resolution": windowClient.getAvailableResolution(),
             "CanvasPrint": windowClient.getCanvasPrint(), "ColorDepth": windowClient.getColorDepth()
         }
+        let canvasFingerPrint;
+        const element = document.createElement('canvas');
+        if(!!(element.getContext && element.getContext('2d'))){
+            canvasFingerPrint = this.canvasFingerPrint();
+        }
+        console.log('canvasFingerPrint', canvasFingerPrint);
     }
 
     onKeyPressed(e) {
@@ -218,12 +243,12 @@ class LoginForm extends Component {
                             onKeyDown={this.onKeyPressed}
                             onKeyUp={this.onKeyRelease}
                             style={{ "width": "500px" }}
-                            autocomplete="off"
-                            onCopy={false}
-                            onPaste={e=>{
+                            autoComplete="off"
+                            fillText={false}
+                            onPaste={e => {
                                 e.preventDefault();
                                 return false
-                              }}
+                            }}
                         />
                     )}
                 </FormItem>
@@ -240,11 +265,11 @@ class LoginForm extends Component {
                             onKeyDown={this.onKeyPressed}
                             onKeyUp={this.onKeyRelease}
                             style={{ "width": "500px" }}
-                            autocomplete="off"
-                            onPaste={e=>{
+                            autoComplete="off"
+                            onPaste={e => {
                                 e.preventDefault();
                                 return false
-                              }}
+                            }}
                         />
                     )}
                 </FormItem>
