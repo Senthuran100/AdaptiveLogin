@@ -155,7 +155,7 @@ class Signup extends Component {
                     </div>
                 </div>
                 <div style={{ "display": "flex", "justify-content": "center" }}>
-                    <img src={mainLogo} />
+                    <img src={mainLogo} alt="Adaptive Auth Logo"/>
                 </div>
                 <p style={{ "display": "flex", "justify-content": "center" }}><b>This platform is created to collect the users data which will be used to make an Adaptive Authentication System.</b></p>
             </div>

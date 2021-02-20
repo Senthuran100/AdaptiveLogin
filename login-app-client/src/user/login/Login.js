@@ -7,7 +7,7 @@ import 'antd/dist/antd.css';
 import { Form, Input, Button, Icon, notification } from 'antd';
 // import bin2hex from 'bin2hex';
 import ClientJS from 'clientjs';
-const client = new ClientJS();
+// const client = new ClientJS();
 // window.UAParser = UaParser;
 // const client = new ClientJS();
 const windowClient = new window.ClientJS();
@@ -124,7 +124,7 @@ class LoginForm extends Component {
             "Fonts": windowClient.getFonts(), "MimeTypes": windowClient.getMimeTypes(),
             "CPU": windowClient.getCPU(), "Device": windowClient.getDevice(), "browser": windowClient.getBrowser(),
             "SoftwareVersion": windowClient.getSoftwareVersion(), "Resolution": windowClient.getAvailableResolution(),
-            "CanvasPrint": windowClient.getCanvasPrint(), "ColorDepth": windowClient.getColorDepth()
+             "ColorDepth": windowClient.getColorDepth()
         }
         let canvasFingerPrint;
         const element = document.createElement('canvas');
