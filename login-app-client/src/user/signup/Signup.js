@@ -134,7 +134,7 @@ class Signup extends Component {
                                 label="Password"
                                 validateStatus={this.state.password.validateStatus}
                                 help={this.state.password.errorMsg}>
-                                <Input
+                                <Input.Password
                                     size="large"
                                     name="password"
                                     type="password"

@@ -46,9 +46,8 @@ class App extends Component {
     });
 
   }
-  componentDidMount(){
-    console.log('jjj')
-    if(localStorage.getItem('user') && localStorage.getItem(ACCESS_TOKEN)){
+  componentDidMount() {
+    if (localStorage.getItem('user') && localStorage.getItem(ACCESS_TOKEN)) {
       console.log(JSON.parse(localStorage.getItem('user')));
       this.setState({
         currentUser: JSON.parse(localStorage.getItem('user')),
@@ -153,6 +152,7 @@ class App extends Component {
 
   }
   render() {
+    console.log('authen', this.state.isAuthenticated, this.state.currentUser);
     return (
       <Layout className="app-container" onMouseDown={this.handleEvent} onMouseUp={this.handleEvent} onMouseMove={this.handleEvent}>
         <AppHeader isAuthenticated={this.state.isAuthenticated}
@@ -166,8 +166,11 @@ class App extends Component {
                 render={(props) => <LoginHome isAuthenticated={this.state.isAuthenticated} username={this.state.currentUser} {...props} />}>
               </Route>
               <Route path="/login"
-                render={(props) => <Login onClick={this.onClickHandler} onLogin={this.handleLogin} mouseObject={this.mouseObjects} {...props} />}></Route>
-              <Route path="/signup" component={Signup}></Route>
+                render={(props) => !this.state.isAuthenticated ?
+                  (<Login username={this.state.currentUser} onClick={this.onClickHandler} onLogin={this.handleLogin} mouseObject={this.mouseObjects} {...props} />) :
+                  <Redirect to={{pathname: `/accessHome/${this.state.currentUser.username}`}}/>
+                }></Route>
+              {!this.state.isAuthenticated && <Route path="/signup" component={Signup}/>}
               <Route path="/users/:username"
                 render={(props) => <Profile isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
               </Route>

@@ -219,6 +219,11 @@ class LoginForm extends Component {
                             onKeyUp={this.onKeyRelease}
                             style={{ "width": "500px" }}
                             autocomplete="off"
+                            onCopy={false}
+                            onPaste={e=>{
+                                e.preventDefault();
+                                return false
+                              }}
                         />
                     )}
                 </FormItem>
@@ -226,7 +231,7 @@ class LoginForm extends Component {
                     {getFieldDecorator('password', {
                         rules: [{ required: true, message: 'Please input your Password!' }],
                     })(
-                        <Input
+                        <Input.Password
                             prefix={<Icon type="lock" />}
                             size="large"
                             name="password"
@@ -236,6 +241,10 @@ class LoginForm extends Component {
                             onKeyUp={this.onKeyRelease}
                             style={{ "width": "500px" }}
                             autocomplete="off"
+                            onPaste={e=>{
+                                e.preventDefault();
+                                return false
+                              }}
                         />
                     )}
                 </FormItem>
