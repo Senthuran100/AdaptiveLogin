@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { login } from '../../util/APIUtils';
-import {currentTime} from '../../util/Helpers';
+import { currentTime } from '../../util/Helpers';
 import './Login.css';
 import { Link } from 'react-router-dom';
 import { ACCESS_TOKEN } from '../../constants';
@@ -28,8 +28,8 @@ let upDownTimeArray = []
 let browserInfo = {}
 
 let timeDiffUsername = 0
-let startTimeUsername=0;
-let endTimeUsername=0;
+let startTimeUsername = 0;
+let endTimeUsername = 0;
 let usernameCount = 0;
 let usernameWPS = 0;
 
@@ -38,7 +38,7 @@ let startTimePassword = 0;
 let endTimePassword = 0;
 let passwordCount = 0;
 let passwordWPS = 0;
-
+let totalTimeSpent = 0;
 class Login extends Component {
 
     render() {
@@ -133,7 +133,7 @@ class LoginForm extends Component {
         }, 100);
         let canvasFingerPrint;
         const element = document.createElement('canvas');
-        if(!!(element.getContext && element.getContext('2d'))){
+        if (!!(element.getContext && element.getContext('2d'))) {
             canvasFingerPrint = this.canvasFingerPrint();
         }
         console.log('canvasFingerPrint', canvasFingerPrint);
@@ -143,7 +143,7 @@ class LoginForm extends Component {
             "Fonts": windowClient.getFonts(), "MimeTypes": windowClient.getMimeTypes(),
             "CPU": windowClient.getCPU(), "Device": windowClient.getDevice(), "browser": windowClient.getBrowser(),
             "SoftwareVersion": windowClient.getSoftwareVersion(), "Resolution": windowClient.getAvailableResolution(),
-             "ColorDepth": windowClient.getColorDepth(),"canvasFingerPrint":canvasFingerPrint
+            "ColorDepth": windowClient.getColorDepth(), "canvasFingerPrint": canvasFingerPrint
         }
 
     }
@@ -214,8 +214,9 @@ class LoginForm extends Component {
                     "dwellTimesArray": dwellTimesArray,
                     "flightTimesArray": flightTimesArray,
                     "upDownTimeArray": upDownTimeArray,
-                    "usernameWPS":usernameWPS,
-                    "passwordWPS":passwordWPS,
+                    "usernameWPS": usernameWPS,
+                    "passwordWPS": passwordWPS,
+                    "totalTimeSpent": totalTimeSpent
                 }
                 values.mouseEvent = mouseEvent
                 values.keyBoardEvent = keyBoardEvent
@@ -244,42 +245,47 @@ class LoginForm extends Component {
     }
 
     onFocusUsername = (e) => {
-        if(startTimeUsername === 0){
-            startTimeUsername=currentTime();
+        if (startTimeUsername === 0) {
+            startTimeUsername = currentTime();
         }
-        usernameCount=e.target.value.length;
+        usernameCount = e.target.value.length;
     }
 
     onBlurUsername = (e) => {
-        if(endTimeUsername === 0){
-            endTimeUsername=currentTime()
+        if (endTimeUsername === 0 && e.target.value.length > 0) {
+            endTimeUsername = currentTime()
         }
-        if(endTimeUsername !== 0 && startTimeUsername !== 0) {
+        if (endTimeUsername !== 0 && startTimeUsername !== 0) {
             timeDiffUsername = endTimeUsername - startTimeUsername;
-            console.log('timeDiffUsername',timeDiffUsername,usernameCount/timeDiffUsername);
+            console.log('timeDiffUsername', timeDiffUsername, usernameCount / timeDiffUsername);
         }
     }
 
     onFocusPassword = (e) => {
-        if(startTimePassword === 0){
-            startTimePassword=currentTime();
+        if (startTimePassword === 0) {
+            startTimePassword = currentTime();
         }
-        passwordCount=e.target.value.length;
+        passwordCount = e.target.value.length;
     }
 
     onBlurPassword = (e) => {
-        if(endTimePassword === 0){
-            endTimePassword=currentTime()
+        if (endTimePassword === 0 && e.target.value.length > 0) {
+            endTimePassword = currentTime()
         }
-        if(endTimePassword !== 0 && startTimePassword !== 0) {
+        if (endTimePassword !== 0 && startTimePassword !== 0) {
             timeDiffPassword = endTimePassword - startTimePassword;
-            console.log('timeDiffUsername',timeDiffPassword,passwordCount/timeDiffPassword);
+            console.log('timeDiffUsername', timeDiffPassword, passwordCount / timeDiffPassword);
         }
+        if (endTimePassword !== 0 && startTimeUsername !== 0) {
+            totalTimeSpent = endTimePassword - startTimeUsername;
+            console.log('timeDiffUsername11', totalTimeSpent);
+        }
+
     }
-    
+
 
     render() {
-        console.log('sampleee',this.state.startTimeUsername,this.state.usernameCount,this.state.endTimeUsername);
+        console.log('sampleee', this.state.startTimeUsername, this.state.usernameCount, this.state.endTimeUsername);
         const { getFieldDecorator } = this.props.form;
         return (
             <Form onSubmit={this.handleSubmit} className="login-form" onMouseDown={this.handleEvent} onMouseUp={this.handleEvent} >
@@ -297,9 +303,9 @@ class LoginForm extends Component {
                             style={{ "width": "500px" }}
                             autoComplete="off"
                             fillText={false}
-                            onFocus = {this.onFocusUsername}
-                            onChange= {this.onFocusUsername}
-                            onBlur = {this.onBlurUsername}
+                            onFocus={this.onFocusUsername}
+                            onChange={this.onFocusUsername}
+                            onBlur={this.onBlurUsername}
                             onPaste={e => {
                                 e.preventDefault();
                                 return false
@@ -321,9 +327,9 @@ class LoginForm extends Component {
                             onKeyUp={this.onKeyRelease}
                             style={{ "width": "500px" }}
                             autoComplete="off"
-                            onFocus = {this.onFocusPassword}
-                            onChange= {this.onFocusPassword}
-                            onBlur = {this.onBlurPassword}
+                            onFocus={this.onFocusPassword}
+                            onChange={this.onFocusPassword}
+                            onBlur={this.onBlurPassword}
                             onPaste={e => {
                                 e.preventDefault();
                                 return false
