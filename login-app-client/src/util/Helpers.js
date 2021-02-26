@@ -29,3 +29,5 @@ export function formatDateTime(dateTimeString) {
 
   return date.getDate() + ' ' + monthNames[monthIndex] + ' ' + year + ' - ' + date.getHours() + ':' + date.getMinutes();
 }  
+
+export const currentTime = () => new Date().getTime();
