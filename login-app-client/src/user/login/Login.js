@@ -39,6 +39,8 @@ let endTimePassword = 0;
 let passwordCount = 0;
 let passwordWPS = 0;
 let totalTimeSpent = 0;
+
+let countShift = 0,countCapslock=0;
 class Login extends Component {
 
     render() {
@@ -150,7 +152,7 @@ class LoginForm extends Component {
 
     onKeyPressed(e) {
         console.log('e', e);
-        console.log('e1', e.which);
+        console.log('e1', e.which,e.key);
         console.log('e2', e.timeStamp);
         console.log(e.key);
         if (!dwellTimes[e.which])
@@ -168,6 +170,12 @@ class LoginForm extends Component {
             startTime = null;
             upDownTimeArray.push({ 'key': e.key, 'upDownTime': upDownTime })
             console.log('upDownTimeArray', upDownTimeArray);
+        }
+        if(e.key==='CapsLock') {
+            countCapslock ++;
+        }
+        if(e.key === 'Shift'){
+            countShift ++;
         }
     }
     onKeyRelease(e) {
@@ -216,7 +224,9 @@ class LoginForm extends Component {
                     "upDownTimeArray": upDownTimeArray,
                     "usernameWPS": usernameWPS,
                     "passwordWPS": passwordWPS,
-                    "totalTimeSpent": totalTimeSpent
+                    "totalTimeSpent": totalTimeSpent,
+                    "countShift":countShift,
+                    "countCapslock":countCapslock,
                 }
                 values.mouseEvent = mouseEvent
                 values.keyBoardEvent = keyBoardEvent
