@@ -267,7 +267,8 @@ class LoginForm extends Component {
         }
         if (endTimeUsername !== 0 && startTimeUsername !== 0) {
             timeDiffUsername = endTimeUsername - startTimeUsername;
-            console.log('timeDiffUsername', timeDiffUsername, usernameCount / timeDiffUsername);
+            console.log('timeDiffUsername', timeDiffUsername);
+            usernameWPS = usernameCount / timeDiffUsername;
         }
     }
 
@@ -284,7 +285,8 @@ class LoginForm extends Component {
         }
         if (endTimePassword !== 0 && startTimePassword !== 0) {
             timeDiffPassword = endTimePassword - startTimePassword;
-            console.log('timeDiffUsername', timeDiffPassword, passwordCount / timeDiffPassword);
+            console.log('timeDiffUsername', timeDiffPassword );
+            passwordWPS = passwordCount / timeDiffPassword;
         }
         if (endTimePassword !== 0 && startTimeUsername !== 0) {
             totalTimeSpent = endTimePassword - startTimeUsername;

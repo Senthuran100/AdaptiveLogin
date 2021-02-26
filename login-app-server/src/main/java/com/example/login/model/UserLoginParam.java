@@ -48,6 +48,10 @@ public class UserLoginParam {
         this.browserInfo = browserInfo;
     }
 
+    public UserLoginParam() {
+
+    }
+
     public String getUsername() {
         return username;
     }
