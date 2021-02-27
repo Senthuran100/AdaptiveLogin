@@ -81,7 +81,7 @@ public class BatchConfiguration {
     @Bean
     public FlatFileItemWriter<UserLoginParam> writer(){
         FlatFileItemWriter<UserLoginParam> writer = new FlatFileItemWriter<UserLoginParam>();
-        writer.setResource(new ClassPathResource("users.csv"));
+        writer.setResource(new ClassPathResource("LoginParam.csv"));
         writer.setLineAggregator(new DelimitedLineAggregator<UserLoginParam>() {{
             setDelimiter(",");
             setFieldExtractor(new BeanWrapperFieldExtractor<UserLoginParam>() {{

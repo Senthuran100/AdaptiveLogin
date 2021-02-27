@@ -48,4 +48,4 @@ The front-end server will start on port `3000`.
 ## CSV Writer
 
  * CSV Writer can be used to write the data from Mysql DB to CSV. Open the CSVWriter and run the project.
-    There will be a `users.csv` file will be created inside the `{PROJECT_FOLDER}\CSVWriter\target\classes` folder.
+    There will be a `LoginParam.csv` file will be created inside the `{PROJECT_FOLDER}\CSVWriter\target\classes` folder.
