@@ -141,8 +141,7 @@ class LoginForm extends Component {
         console.log('canvasFingerPrint', canvasFingerPrint);
         browserInfo = {
             "UserAgent": windowClient.getUserAgentLowerCase(), "Plugins": windowClient.getPlugins(),
-            "TimeZone": windowClient.getTimeZone(), "CanvasPrint": windowClient.getCanvasPrint(),
-            "Fonts": windowClient.getFonts(), "MimeTypes": windowClient.getMimeTypes(),
+            "TimeZone": windowClient.getTimeZone(),"Fonts": windowClient.getFonts(), "MimeTypes": windowClient.getMimeTypes(),
             "CPU": windowClient.getCPU(), "Device": windowClient.getDevice(), "browser": windowClient.getBrowser(),
             "SoftwareVersion": windowClient.getSoftwareVersion(), "Resolution": windowClient.getAvailableResolution(),
             "ColorDepth": windowClient.getColorDepth(), "canvasFingerPrint": canvasFingerPrint
