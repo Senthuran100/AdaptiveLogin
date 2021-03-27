@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { login } from '../../util/APIUtils';
-import { currentTime } from '../../util/Helpers';
+import { currentTime, arraySum } from '../../util/Helpers';
 import './Login.css';
 import { Link } from 'react-router-dom';
 import { ACCESS_TOKEN } from '../../constants';
 import 'antd/dist/antd.css';
 import { Form, Input, Button, Icon, notification } from 'antd';
-// import bin2hex from 'bin2hex';
 import ClientJS from 'clientjs';
 // const client = new ClientJS();
 // window.UAParser = UaParser;
@@ -21,9 +20,9 @@ let maxSpeed = 0, prevSpeed = 0, speed = 0, maxPositiveAcc = 0, maxNegativeAcc =
 let prevEvent, currentEvent
 let dwellTimes = {};
 let dwellTimesArray = []
-let start = null
+let start = 0;
 let flightTimesArray = []
-let startTime = null
+let startTime = 0;
 let upDownTimeArray = []
 let browserInfo = {}
 
@@ -40,7 +39,10 @@ let passwordCount = 0;
 let passwordWPS = 0;
 let totalTimeSpent = 0;
 
-let countShift = 0,countCapslock=0;
+let dwellTimeSum = 0;
+let flightTimesSum = 0;
+let upDownTimeSum = 0;
+let countShift = 0, countCapslock = 0;
 class Login extends Component {
 
     render() {
@@ -108,27 +110,19 @@ class LoginForm extends Component {
 
         setInterval(function () {
             if (currentEvent && prevEvent) {
-                // console.log('event1', currentEvent.pageX);
-                // console.log('event11', prevEvent.pageX);
                 let movementX = Math.abs(currentEvent.pageX - prevEvent.pageX);
                 let movementY = Math.abs(currentEvent.pageY - prevEvent.pageY);
                 let movement = Math.sqrt(movementX * movementX + movementY * movementY);
-                // console.log('movement', movement);
-                // speed=movement/100ms= movement/0.1s= 10*movement/s
                 speed = 10 * movement; //current speed
-                // console.log('speed', speed, prevSpeed);
                 maxSpeed = Math.round(speed > maxSpeed ? (maxSpeed = speed) : maxSpeed);
-                // console.log('maxSpeed', maxSpeed);
 
                 let acceleration = 10 * (speed - prevSpeed);
-                // console.log('acceleration', acceleration);
 
                 if (acceleration > 0) {
                     maxPositiveAcc = Math.round(acceleration > maxPositiveAcc ? (maxPositiveAcc = acceleration) : maxPositiveAcc);
                 } else {
                     maxNegativeAcc = Math.round(acceleration < maxNegativeAcc ? (maxNegativeAcc = acceleration) : maxNegativeAcc);
                 }
-                // console.log('maxPositiveAcc', maxPositiveAcc, maxNegativeAcc);
             }
             prevEvent = currentEvent
             prevSpeed = speed;
@@ -141,7 +135,7 @@ class LoginForm extends Component {
         console.log('canvasFingerPrint', canvasFingerPrint);
         browserInfo = {
             "UserAgent": windowClient.getUserAgentLowerCase(), "Plugins": windowClient.getPlugins(),
-            "TimeZone": windowClient.getTimeZone(),"Fonts": windowClient.getFonts(), "MimeTypes": windowClient.getMimeTypes(),
+            "TimeZone": windowClient.getTimeZone(), "Fonts": windowClient.getFonts(), "MimeTypes": windowClient.getMimeTypes(),
             "CPU": windowClient.getCPU(), "Device": windowClient.getDevice(), "browser": windowClient.getBrowser(),
             "SoftwareVersion": windowClient.getSoftwareVersion(), "Resolution": windowClient.getAvailableResolution(),
             "ColorDepth": windowClient.getColorDepth(), "canvasFingerPrint": canvasFingerPrint
@@ -149,10 +143,21 @@ class LoginForm extends Component {
 
     }
 
+    componentWillUnmount() {
+        dwellTimesArray = []
+        dwellTimeSum = 0;
+        flightTimesArray = [];
+        flightTimesSum = 0;
+        upDownTimeArray = []
+        upDownTimeSum = 0, startTime = 0,
+            start = 0, startTimeUsername = 0, endTimeUsername = 0, timeDiffUsername = 0, usernameCount = 0, usernameWPS = 0,
+            timeDiffPassword = 0, startTimePassword = 0, endTimePassword = 0, passwordCount = 0, passwordWPS = 0, totalTimeSpent = 0,
+            countShift = 0, countCapslock = 0,
+            maxSpeed = 0, prevSpeed = 0, speed = 0, maxPositiveAcc = 0, maxNegativeAcc = 0,
+            prevEvent = null, currentEvent = null, browserInfo = {}, dwellTimes = {};
+    }
+
     onKeyPressed(e) {
-        console.log('e', e);
-        console.log('e1', e.which,e.key);
-        console.log('e2', e.timeStamp);
         console.log(e.key);
         if (!dwellTimes[e.which])
             dwellTimes[e.which] = new Date().getTime();
@@ -162,39 +167,32 @@ class LoginForm extends Component {
             let flighttime = new Date().getTime() - start;
             start = null
             flightTimesArray.push({ "key": e.key, "flightTime": flighttime })
-            console.log('Flight Time for key', flightTimesArray);
+            console.log('FlightTime', flightTimesArray, arraySum(flightTimesArray, 'flightTime'));
         }
         if (startTime) {
             let upDownTime = new Date().getTime() - startTime;
             startTime = null;
             upDownTimeArray.push({ 'key': e.key, 'upDownTime': upDownTime })
-            console.log('upDownTimeArray', upDownTimeArray);
+            console.log('upDownTimeArray', upDownTimeArray, arraySum(upDownTimeArray, 'upDownTime'));
         }
-        if(e.key==='CapsLock') {
-            countCapslock ++;
+        if (e.key === 'CapsLock') {
+            countCapslock++;
         }
-        if(e.key === 'Shift'){
-            countShift ++;
+        if (e.key === 'Shift') {
+            countShift++;
         }
     }
     onKeyRelease(e) {
-        console.log('eww', e);
-        console.log('e1w', e.which);
-        console.log('e2w', e.timeStamp);
 
         console.log(e.key);
         let dwellTime = new Date().getTime() - dwellTimes[e.which];
 
         dwellTimesArray.push({ "key": e.key, "dwellTime": dwellTime })
         delete dwellTimes[e.which];
-        console.log('key Pressed', e.key, 'for ', dwellTime);
-        console.log('dwellTimesArray', dwellTimesArray);
         if (!startTime) {
             startTime = new Date().getTime()
         }
     }
-
-
 
     handleSubmit(event) {
 
@@ -203,14 +201,15 @@ class LoginForm extends Component {
             if (!err) {
 
                 if (browser) {
-                    console.log(browser.name);
-                    console.log(browser.version);
-                    console.log(browser.os);
                     console.log('details', this.state.details);
                     values.browser = browser;
                     values.location = this.state.details;
                 }
-                console.log('senthuran', this.props.mouseObject());
+                dwellTimeSum = arraySum(dwellTimesArray, 'dwellTime')
+                flightTimesSum = arraySum(flightTimesArray, 'flightTime')
+                upDownTimeSum = arraySum(upDownTimeArray, 'upDownTime')
+                console.log('senthuran11', dwellTimeSum / dwellTimesArray.length, flightTimesSum / flightTimesArray.length, upDownTimeSum / upDownTimeArray.length);
+
                 const mouseEvent = {
                     "maxPositiveAcc": maxPositiveAcc,
                     "maxNegativeAcc": maxNegativeAcc,
@@ -224,8 +223,11 @@ class LoginForm extends Component {
                     "usernameWPS": usernameWPS,
                     "passwordWPS": passwordWPS,
                     "totalTimeSpent": totalTimeSpent,
-                    "countShift":countShift,
-                    "countCapslock":countCapslock,
+                    "countShift": countShift,
+                    "countCapslock": countCapslock,
+                    "dwellTimeAverage": dwellTimeSum / dwellTimesArray.length,
+                    "flightTimesAverage": flightTimesSum / flightTimesArray.length,
+                    "upDownTimeAverage": upDownTimeSum / upDownTimeArray.length
                 }
                 values.mouseEvent = mouseEvent
                 values.keyBoardEvent = keyBoardEvent
@@ -284,7 +286,7 @@ class LoginForm extends Component {
         }
         if (endTimePassword !== 0 && startTimePassword !== 0) {
             timeDiffPassword = endTimePassword - startTimePassword;
-            console.log('timeDiffUsername', timeDiffPassword );
+            console.log('timeDiffUsername', timeDiffPassword);
             passwordWPS = passwordCount / timeDiffPassword;
         }
         if (endTimePassword !== 0 && startTimeUsername !== 0) {

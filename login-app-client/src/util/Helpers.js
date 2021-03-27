@@ -31,3 +31,5 @@ export function formatDateTime(dateTimeString) {
 }  
 
 export const currentTime = () => new Date().getTime();
+
+export const arraySum = (array,key) => array.reduce((sum,obj)=>sum+=obj[key],0)

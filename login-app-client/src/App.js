@@ -100,37 +100,42 @@ class App extends Component {
   }
 
   handleEvent = (event) => {
-    total += Math.sqrt(Math.abs(event.movementX) * Math.abs(event.movementX) + Math.abs(event.movementY) * Math.abs(event.movementY))
-    totalX += Math.abs(event.movementX);
-    totalY += Math.abs(event.movementY)
-    // console.log('event', event.type, totalX, totalY, total);
-    // console.log('date', (Date.now() - timestamp) / 1000);
-    // let timediff = (Date.now() - timestamp)
+    if (window.location.pathname === '/login') {
+      total += Math.sqrt(Math.abs(event.movementX) * Math.abs(event.movementX) + Math.abs(event.movementY) * Math.abs(event.movementY))
+      totalX += Math.abs(event.movementX);
+      totalY += Math.abs(event.movementY)
+      console.log('event', event.type, totalX, totalY, total, window.location.pathname);
 
-    if (event.type === "mousedown") {
-      mouseDown++;
-      // console.log('mousedown');
-    }
-    else if (event.type === "mouseup") {
-      mouseUp++;
-      // console.log('mouseup');
-    }
-    if (event.nativeEvent.which === 1) {
-      leftClick++;
-      // console.log('Left click');
-    } else if (event.nativeEvent.which === 3) {
-      rightClick++;
-      // console.log('Right click');
-    }
+      if (event.type === "mousedown") {
+        mouseDown++;
+      }
+      else if (event.type === "mouseup") {
+        mouseUp++;
+      }
+      if (event.nativeEvent.which === 1) {
+        leftClick++;
+      } else if (event.nativeEvent.which === 3) {
+        rightClick++;
+      }
 
-    mouseObject = {
-      'totalX': totalX,
-      'totalY': totalY,
-      'total': total,
-      'leftClick': leftClick,
-      'rightClick': rightClick,
-      'mouseDown': mouseDown,
-      'mouseUp': mouseUp
+      mouseObject = {
+        'totalX': totalX,
+        'totalY': totalY,
+        'total': total,
+        'leftClick': leftClick,
+        'rightClick': rightClick,
+        'mouseDown': mouseDown,
+        'mouseUp': mouseUp
+      }
+    }
+    if (window.location.pathname !== '/login' && totalX !== 0) {
+      totalX = 0;
+      totalY = 0;
+      total = 0;
+      leftClick = 0;
+      rightClick = 0;
+      mouseDown = 0;
+      mouseUp = 0;
     }
   }
 
@@ -168,9 +173,9 @@ class App extends Component {
               <Route path="/login"
                 render={(props) => !this.state.isAuthenticated ?
                   (<Login username={this.state.currentUser} onClick={this.onClickHandler} onLogin={this.handleLogin} mouseObject={this.mouseObjects} {...props} />) :
-                  <Redirect to={{pathname: `/accessHome/${this.state.currentUser.username}`}}/>
+                  <Redirect to={{ pathname: `/accessHome/${this.state.currentUser.username}` }} />
                 }></Route>
-              {!this.state.isAuthenticated && <Route path="/signup" component={Signup}/>}
+              {!this.state.isAuthenticated && <Route path="/signup" component={Signup} />}
               <Route path="/users/:username"
                 render={(props) => <Profile isAuthenticated={this.state.isAuthenticated} currentUser={this.state.currentUser} {...props} />}>
               </Route>
