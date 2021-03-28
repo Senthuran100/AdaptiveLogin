@@ -54,7 +54,10 @@ public class BatchConfiguration {
     public JdbcCursorItemReader<UserLoginParam> reader(){
         JdbcCursorItemReader<UserLoginParam> reader = new JdbcCursorItemReader<UserLoginParam>();
         reader.setDataSource(dataSource);
-        reader.setSql("SELECT username,datetime,browser,location,mouseevent,keyboardevent,browser_info FROM user_login_params");
+        // query to select all the fields
+//        reader.setSql("SELECT username,datetime,browser,location,mouseevent,keyboardevent,browser_info FROM user_login_params");
+        // query to select only the mouse event and keyboard event
+        reader.setSql("SELECT username,datetime,mouseevent,keyboardevent FROM user_login_params");
         reader.setRowMapper(new UserRowMapper());
 
         return reader;
@@ -67,11 +70,11 @@ public class BatchConfiguration {
             UserLoginParam user = new UserLoginParam();
             user.setUsername(rs.getString("username"));
             user.setDatetime(rs.getDate("datetime"));
-            user.setBrowser(rs.getString("browser"));
-            user.setLocation(rs.getString("location"));
+//            user.setBrowser(rs.getString("browser"));
+//            user.setLocation(rs.getString("location"));
             user.setMouseevent(rs.getString("mouseevent"));
             user.setKeyboardevent(rs.getString("keyboardevent"));
-            user.setBrowser_info(rs.getString("browser_info"));
+//            user.setBrowser_info(rs.getString("browser_info"));
             return user;
         }
 
@@ -85,11 +88,16 @@ public class BatchConfiguration {
     @Bean
     public FlatFileItemWriter<UserLoginParam> writer(){
         FlatFileItemWriter<UserLoginParam> writer = new FlatFileItemWriter<UserLoginParam>();
-        writer.setResource(new ClassPathResource("LoginParam.csv"));
+//        writer.setResource(new ClassPathResource("LoginParam.csv"));
+        writer.setResource(new ClassPathResource("MouseKeyboardEvent.csv"));
         writer.setLineAggregator(new DelimitedLineAggregator<UserLoginParam>() {{
             setDelimiter(",");
             setFieldExtractor(new BeanWrapperFieldExtractor<UserLoginParam>() {{
-                setNames(new String[] { "username", "datetime","browser","location","mouseevent","keyboardevent","browser_info" });
+                // set all the fields.
+//                setNames(new String[] { "username", "datetime","browser","location","mouseevent","keyboardevent","browser_info" });
+                // set only the keyboard and mouse events
+                setNames(new String[] { "username", "datetime","mouseevent","keyboardevent" });
+
             }});
         }});
 

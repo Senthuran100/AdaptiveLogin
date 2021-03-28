@@ -217,9 +217,9 @@ class LoginForm extends Component {
                     ...this.props.mouseObject()
                 }
                 const keyBoardEvent = {
-                    "dwellTimesArray": dwellTimesArray,
-                    "flightTimesArray": flightTimesArray,
-                    "upDownTimeArray": upDownTimeArray,
+                    // "dwellTimesArray": dwellTimesArray,
+                    // "flightTimesArray": flightTimesArray,
+                    // "upDownTimeArray": upDownTimeArray,
                     "usernameWPS": usernameWPS,
                     "passwordWPS": passwordWPS,
                     "totalTimeSpent": totalTimeSpent,
