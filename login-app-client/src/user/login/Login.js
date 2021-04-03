@@ -7,9 +7,6 @@ import { ACCESS_TOKEN } from '../../constants';
 import 'antd/dist/antd.css';
 import { Form, Input, Button, Icon, notification } from 'antd';
 import ClientJS from 'clientjs';
-// const client = new ClientJS();
-// window.UAParser = UaParser;
-// const client = new ClientJS();
 const windowClient = new window.ClientJS();
 const stringHash = require("string-hash");
 
@@ -42,7 +39,7 @@ let totalTimeSpent = 0;
 let dwellTimeSum = 0;
 let flightTimesSum = 0;
 let upDownTimeSum = 0;
-let countShift = 0, countCapslock = 0;
+let countShift = 0, countCapslock = 0, countKey = 0;
 class Login extends Component {
 
     render() {
@@ -152,7 +149,7 @@ class LoginForm extends Component {
         upDownTimeSum = 0, startTime = 0,
             start = 0, startTimeUsername = 0, endTimeUsername = 0, timeDiffUsername = 0, usernameCount = 0, usernameWPS = 0,
             timeDiffPassword = 0, startTimePassword = 0, endTimePassword = 0, passwordCount = 0, passwordWPS = 0, totalTimeSpent = 0,
-            countShift = 0, countCapslock = 0,
+            countShift = 0, countCapslock = 0, countKey = 0,
             maxSpeed = 0, prevSpeed = 0, speed = 0, maxPositiveAcc = 0, maxNegativeAcc = 0,
             prevEvent = null, currentEvent = null, browserInfo = {}, dwellTimes = {};
     }
@@ -181,6 +178,7 @@ class LoginForm extends Component {
         if (e.key === 'Shift') {
             countShift++;
         }
+        countKey++;
     }
     onKeyRelease(e) {
 
@@ -217,14 +215,12 @@ class LoginForm extends Component {
                     ...this.props.mouseObject()
                 }
                 const keyBoardEvent = {
-                    // "dwellTimesArray": dwellTimesArray,
-                    // "flightTimesArray": flightTimesArray,
-                    // "upDownTimeArray": upDownTimeArray,
                     "usernameWPS": usernameWPS,
                     "passwordWPS": passwordWPS,
                     "totalTimeSpent": totalTimeSpent,
                     "countShift": countShift,
                     "countCapslock": countCapslock,
+                    "countKey": countKey,
                     "dwellTimeAverage": dwellTimeSum / dwellTimesArray.length,
                     "flightTimesAverage": flightTimesSum / flightTimesArray.length,
                     "upDownTimeAverage": upDownTimeSum / upDownTimeArray.length
