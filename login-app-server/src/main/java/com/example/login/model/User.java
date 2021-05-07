@@ -49,6 +49,14 @@ public class User extends DateAudit {
     @Size(max = 100)
     private String password;
 
+//    @NotBlank
+    @Size(max = 100)
+    private String question;
+
+//    @NotBlank
+    @Size(max = 100)
+    private String answer;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -59,11 +67,13 @@ public class User extends DateAudit {
 
     }
 
-    public User(String name, String username, String email, String password) {
+    public User(String name, String username, String email, String password,String question,String answer) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.question = question;
+        this.answer = answer;
     }
 
     public Long getId() {
@@ -112,5 +122,21 @@ public class User extends DateAudit {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 }

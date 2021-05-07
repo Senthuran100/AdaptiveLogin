@@ -57,7 +57,7 @@ public class BatchConfiguration {
         // query to select all the fields
 //        reader.setSql("SELECT username,datetime,browser,location,mouseevent,keyboardevent,browser_info FROM user_login_params");
         // query to select only the mouse event and keyboard event
-        reader.setSql("SELECT username,datetime,mouseevent,keyboardevent FROM user_login_params");
+        reader.setSql("SELECT username,datetime,mouseevent,keyboardevent FROM user_login_params where id > 162");
         reader.setRowMapper(new UserRowMapper());
 
         return reader;

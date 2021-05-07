@@ -21,6 +21,14 @@ public class SignUpRequest {
     @Size(min = 6, max = 20)
     private String password;
 
+    @NotBlank
+    @Size(max = 20)
+    private String question;
+
+    @NotBlank
+    @Size(max = 20)
+    private String answer;
+
     public String getName() {
         return name;
     }
@@ -51,5 +59,21 @@ public class SignUpRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 }
