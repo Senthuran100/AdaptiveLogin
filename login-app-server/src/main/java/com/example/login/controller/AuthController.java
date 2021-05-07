@@ -102,16 +102,14 @@ public class AuthController {
                             new UsernameNotFoundException("User not found with username or email : " + adaptiveAuthRequest.getUsername()));
             if (user.getQuestion().equals(adaptiveAuthRequest.getQuestion()) && user.getAnswer().toLowerCase().equals(adaptiveAuthRequest.getAnswer().toLowerCase())) {
                 logger.info("ttttt");
-                return ResponseEntity.ok(new ApiResponse(true, "Verified"));
+                return ResponseEntity.ok().body(new ApiResponse(true, "Verified"));
             } else {
                 logger.info("rrrrr");
-
-                return ResponseEntity.ok(new ApiResponse(true, "Not Verified"));
+                return ResponseEntity.ok().body(new ApiResponse(true, "Not Verified"));
             }
         }
         logger.info("eeee");
-
-        return ResponseEntity.ok(new ApiResponse(false, "Not Verified"));
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true, "Not Verified"));
     }
 
     @PostMapping("/signup")

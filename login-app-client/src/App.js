@@ -90,7 +90,6 @@ class App extends Component {
     this.props.history.push(`/adaptiveLogin`);
   }
 
-
   handleLogout(redirectTo = "/login", notificationType = "success", description = "You're successfully logged out.") {
     localStorage.removeItem(ACCESS_TOKEN);
     localStorage.removeItem('user')
@@ -102,7 +101,7 @@ class App extends Component {
     this.props.history.push(redirectTo);
 
     notification[notificationType]({
-      message: 'Login App',
+      message: 'Adaptive Auth',
       description: description,
     });
   }
@@ -152,7 +151,7 @@ class App extends Component {
 
   handleLogin() {
     notification.success({
-      message: 'Login App',
+      message: 'Adaptive Auth',
       description: "You're successfully logged in.",
     });
     this.loadCurrentUser();
@@ -160,7 +159,7 @@ class App extends Component {
 
   handleSecondLogin() {
     notification.success({
-      message: 'Login App',
+      message: 'Adaptive Auth',
       description: "You're successfully logged in.",
     });
     this.loadCurrentUser();
@@ -177,12 +176,12 @@ class App extends Component {
         <Content className="app-content">
           <div className="container" style={{ minHeight: '1025px' }}>
             <Switch>
+              {this.state.secondAuthentication && <Route exact path="/adaptiveLogin"
+                render={(props) => <AdaptiveOutput username={this.state.currentUser} loadCurrentUser={this.loadCurrentUser} onLogin={this.handleLogin} {...props} />}
+              ></Route>}
               <Route path="/accessHome/:username"
                 render={(props) => <LoginHome isAuthenticated={this.state.isAuthenticated} username={this.state.currentUser} {...props} />}>
               </Route>
-              <Route path="/adaptiveLogin"
-                render={(props) => <AdaptiveOutput username={this.state.currentUser} loadCurrentUser={this.loadCurrentUser} onLogin={this.handleLogin} {...props} />}
-              ></Route>
               <Route path="/login"
                 render={(props) => !this.state.isAuthenticated ?
                   (<Login username={this.state.currentUser} onLogin={this.handleLogin} mouseObject={this.mouseObjects} adaptiveLogin={this.adaptiveLogin} {...props} />) :

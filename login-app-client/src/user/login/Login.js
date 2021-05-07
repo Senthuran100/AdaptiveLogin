@@ -244,12 +244,12 @@ class LoginForm extends Component {
                     }).catch(error => {
                         if (error.status === 401) {
                             notification.error({
-                                message: 'Login App',
+                                message: 'Adaptive Auth',
                                 description: 'Your Username or Password is incorrect. Please try again!'
                             });
                         } else {
                             notification.error({
-                                message: 'Login App',
+                                message: 'Adaptive Auth',
                                 description: error.message || 'Sorry! Something went wrong. Please try again!'
                             });
                         }
@@ -289,12 +289,12 @@ class LoginForm extends Component {
         }
         if (endTimePassword !== 0 && startTimePassword !== 0) {
             timeDiffPassword = endTimePassword - startTimePassword;
-            console.log('timeDiffUsername', timeDiffPassword);
+            // console.log('timeDiffUsername', timeDiffPassword);
             passwordWPS = passwordCount / timeDiffPassword;
         }
         if (endTimePassword !== 0 && startTimeUsername !== 0) {
             totalTimeSpent = endTimePassword - startTimeUsername;
-            console.log('timeDiffUsername11', totalTimeSpent);
+            // console.log('timeDiffUsername11', totalTimeSpent);
         }
 
     }

@@ -19,7 +19,7 @@ class AdaptiveOutput extends Component {
             }
         }
         this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        // this.handleSubmit = this.handleSubmit.bind(this);
         this.isFormInvalid = this.isFormInvalid.bind(this);
         this.handleSecurityQuestion = this.handleSecurityQuestion.bind(this);
     }
@@ -45,7 +45,9 @@ class AdaptiveOutput extends Component {
         });
     }
 
-    handleSubmit() {
+     handleSubmit =(event) =>{
+        event.preventDefault();
+
         console.log('adaptiveRequest', this.props.username);
 
         const adaptiveRequest = {
@@ -57,19 +59,18 @@ class AdaptiveOutput extends Component {
         secondLogin(adaptiveRequest)
             .then(response => {
                 console.log('respp', response);
-                this.props.onLogin();
 
-                // if (response.message === 'Verified') {
-                //     this.props.onLogin();
-                // } else {
-                //     notification.error({
-                //         message: 'Login App',
-                //         description: "Please Try Again.",
-                //     }); 
-                // }
+                if (response.message === 'Verified') {
+                    this.props.onLogin();
+                } else {
+                    notification.error({
+                        message: 'Adaptive Auth',
+                        description: "Please Try Again.",
+                    }); 
+                }
             }).catch(error => {
                 notification.error({
-                    message: 'Login App',
+                    message: 'Adaptive Auth',
                     description: error.message || 'Sorry! Something went wrong. Please try again!'
                 });
             });
