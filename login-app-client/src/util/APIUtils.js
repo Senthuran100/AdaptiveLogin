@@ -39,6 +39,14 @@ export function signup(signupRequest) {
     });
 }
 
+export function secondLogin(secondLoginRequest) {
+    return request({
+        url: API_BASE_URL + "/auth/secondLogin",
+        method: 'POST',
+        body: JSON.stringify(secondLoginRequest)
+    });
+}
+
 export function checkUsernameAvailability(username) {
     return request({
         url: API_BASE_URL + "/user/checkUsernameAvailability?username=" + username,

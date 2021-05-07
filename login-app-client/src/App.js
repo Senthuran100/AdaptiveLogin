@@ -40,6 +40,7 @@ class App extends Component {
     this.loadCurrentUser = this.loadCurrentUser.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
     this.adaptiveLogin = this.adaptiveLogin.bind(this);
+    this.handleSecondLogin = this.handleSecondLogin.bind(this);
 
     notification.config({
       placement: 'topRight',
@@ -149,19 +150,22 @@ class App extends Component {
     return mouseObject
   }
 
-  onClickHandler() {
-    console.log('click');
-  }
-
   handleLogin() {
-    console.log('mouse', mouseObject);
     notification.success({
       message: 'Login App',
       description: "You're successfully logged in.",
     });
     this.loadCurrentUser();
-
   }
+
+  handleSecondLogin() {
+    notification.success({
+      message: 'Login App',
+      description: "You're successfully logged in.",
+    });
+    this.loadCurrentUser();
+  }
+
   render() {
     console.log('authen', this.state.isAuthenticated, this.state.currentUser);
     return (
@@ -176,12 +180,12 @@ class App extends Component {
               <Route path="/accessHome/:username"
                 render={(props) => <LoginHome isAuthenticated={this.state.isAuthenticated} username={this.state.currentUser} {...props} />}>
               </Route>
-              {this.state.secondAuthentication && <Route path="/adaptiveLogin"
-                render={(props) => <AdaptiveOutput username={this.state.currentUser} {...props} />}
-              ></Route>}
+              <Route path="/adaptiveLogin"
+                render={(props) => <AdaptiveOutput username={this.state.currentUser} loadCurrentUser={this.loadCurrentUser} onLogin={this.handleLogin} {...props} />}
+              ></Route>
               <Route path="/login"
                 render={(props) => !this.state.isAuthenticated ?
-                  (<Login username={this.state.currentUser} onClick={this.onClickHandler} onLogin={this.handleLogin} mouseObject={this.mouseObjects} adaptiveLogin={this.adaptiveLogin} {...props} />) :
+                  (<Login username={this.state.currentUser} onLogin={this.handleLogin} mouseObject={this.mouseObjects} adaptiveLogin={this.adaptiveLogin} {...props} />) :
                   <Redirect to={{ pathname: `/accessHome/${this.state.currentUser.username}` }} />
                 }></Route>
               {!this.state.isAuthenticated && <Route path="/signup" component={Signup} />}

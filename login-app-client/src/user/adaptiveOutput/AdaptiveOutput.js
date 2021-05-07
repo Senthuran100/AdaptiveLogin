@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Select } from 'antd';
+import { Form, Input, Button, Select, notification } from 'antd';
 import { SECURITY_ANS_MIN_LENGTH, SECURITY_ANS_MAX_LENGTH } from '../../constants';
 import './AdaptiveOutput.css';
+import { secondLogin } from '../../util/APIUtils';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -18,7 +19,7 @@ class AdaptiveOutput extends Component {
             }
         }
         this.handleInputChange = this.handleInputChange.bind(this);
-        // this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
         this.isFormInvalid = this.isFormInvalid.bind(this);
         this.handleSecurityQuestion = this.handleSecurityQuestion.bind(this);
     }
@@ -44,14 +45,35 @@ class AdaptiveOutput extends Component {
         });
     }
 
-    handleSubmit(event) {
+    handleSubmit() {
         console.log('adaptiveRequest', this.props.username);
 
         const adaptiveRequest = {
-            username: this.props.username,
+            username: localStorage.getItem('username'),
             question: this.state.question.value,
             answer: this.state.answer.value
         };
+
+        secondLogin(adaptiveRequest)
+            .then(response => {
+                console.log('respp', response);
+                this.props.onLogin();
+
+                // if (response.message === 'Verified') {
+                //     this.props.onLogin();
+                // } else {
+                //     notification.error({
+                //         message: 'Login App',
+                //         description: "Please Try Again.",
+                //     }); 
+                // }
+            }).catch(error => {
+                notification.error({
+                    message: 'Login App',
+                    description: error.message || 'Sorry! Something went wrong. Please try again!'
+                });
+            });
+
         console.log('adaptiveRequest', adaptiveRequest);
     }
 
@@ -111,7 +133,7 @@ class AdaptiveOutput extends Component {
                             name="answer"
                             autoComplete="off"
                             placeholder="Your Security Answer"
-                            // value={this.state.answer.value}
+                            value={this.state.answer.value}
                             onChange={(event) => this.handleInputChange(event, this.validateAnswer)} />
                     </FormItem>
                     <FormItem>

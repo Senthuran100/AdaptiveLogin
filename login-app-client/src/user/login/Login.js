@@ -3,7 +3,7 @@ import { login } from '../../util/APIUtils';
 import { currentTime, arraySum } from '../../util/Helpers';
 import './Login.css';
 import { Link } from 'react-router-dom';
-import { ACCESS_TOKEN } from '../../constants';
+import { ACCESS_TOKEN,USERNAME } from '../../constants';
 import 'antd/dist/antd.css';
 import { Form, Input, Button, Icon, notification } from 'antd';
 import ClientJS from 'clientjs';
@@ -234,6 +234,7 @@ class LoginForm extends Component {
                 login(loginRequest)
                     .then(response => {
                         localStorage.setItem(ACCESS_TOKEN, response.accessToken);
+                        localStorage.setItem(USERNAME,response.username)
                         console.log('response', response);
                         if (response.authfactor === 'security_question') {
                             this.props.adaptiveLogin();

@@ -5,10 +5,7 @@ import com.example.login.model.Role;
 import com.example.login.model.RoleName;
 import com.example.login.model.User;
 import com.example.login.model.UserLoginParam;
-import com.example.login.payload.ApiResponse;
-import com.example.login.payload.JwtAuthenticationResponse;
-import com.example.login.payload.LoginRequest;
-import com.example.login.payload.SignUpRequest;
+import com.example.login.payload.*;
 import com.example.login.repository.RoleRepository;
 import com.example.login.repository.UserLoginParamRepo;
 import com.example.login.repository.UserRepository;
@@ -62,10 +59,10 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        logger.info("--- loginRequest browser ----"+loginRequest.getBrowser());
-        logger.info("--- loginRequest location ---"+loginRequest.getLocation());
-        logger.info("--- loginRequest mouseEvent ---"+loginRequest.getMouseEvent());
-        logger.info("--- loginRequest keyBoardEvent ---"+loginRequest.getKeyBoardEvent());
+        logger.info("--- loginRequest browser ----" + loginRequest.getBrowser());
+        logger.info("--- loginRequest location ---" + loginRequest.getLocation());
+        logger.info("--- loginRequest mouseEvent ---" + loginRequest.getMouseEvent());
+        logger.info("--- loginRequest keyBoardEvent ---" + loginRequest.getKeyBoardEvent());
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -77,31 +74,54 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenProvider.generateToken(authentication);
 
-        if(userRepository.existsByUsername(loginRequest.getUsernameOrEmail()) || userRepository.existsByEmail(loginRequest.getUsernameOrEmail())) {
+        if (userRepository.existsByUsername(loginRequest.getUsernameOrEmail()) || userRepository.existsByEmail(loginRequest.getUsernameOrEmail())) {
             User user = userRepository.findByUsernameOrEmail(loginRequest.getUsernameOrEmail(), loginRequest.getUsernameOrEmail())
                     .orElseThrow(() ->
-                                    new UsernameNotFoundException("User not found with username or email : " + loginRequest.getUsernameOrEmail()));
+                            new UsernameNotFoundException("User not found with username or email : " + loginRequest.getUsernameOrEmail()));
             Date date = new Date(System.currentTimeMillis());
             // creating userLoginEvent Param
-            UserLoginParam userLoginParam= new UserLoginParam(user.getUsername(),date,loginRequest.getBrowser().toString(),
-                    loginRequest.getLocation().toString(),loginRequest.getMouseEvent().toString(),loginRequest.getKeyBoardEvent().toString(),loginRequest.getBrowserInfo().toString());
+            UserLoginParam userLoginParam = new UserLoginParam(user.getUsername(), date, loginRequest.getBrowser().toString(),
+                    loginRequest.getLocation().toString(), loginRequest.getMouseEvent().toString(), loginRequest.getKeyBoardEvent().toString(), loginRequest.getBrowserInfo().toString());
             userLoginParamRepo.save(userLoginParam);
-            return ResponseEntity.ok(new JwtAuthenticationResponse(jwt,"Event is Stored","security_question"));
+            return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", "security_question",user.getUsername()));
         }
 
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
     }
 
+    @PostMapping("/secondLogin")
+    public ResponseEntity<?> secondLogin(@Valid @RequestBody AdaptiveAuthRequest adaptiveAuthRequest) {
+        logger.info("----Adaptive-----"+adaptiveAuthRequest.getUsername(),adaptiveAuthRequest.getQuestion(),adaptiveAuthRequest.getAnswer());
+        logger.info("----Adaptive111-----"+adaptiveAuthRequest.getQuestion(),adaptiveAuthRequest.getAnswer());
+        logger.info("----Adaptive222-----"+adaptiveAuthRequest.getAnswer());
 
+
+        if (userRepository.existsByUsername(adaptiveAuthRequest.getUsername()) || userRepository.existsByEmail(adaptiveAuthRequest.getUsername())) {
+            User user = userRepository.findByUsernameOrEmail(adaptiveAuthRequest.getUsername(), adaptiveAuthRequest.getUsername())
+                    .orElseThrow(() ->
+                            new UsernameNotFoundException("User not found with username or email : " + adaptiveAuthRequest.getUsername()));
+            if (user.getQuestion().equals(adaptiveAuthRequest.getQuestion()) && user.getAnswer().toLowerCase().equals(adaptiveAuthRequest.getAnswer().toLowerCase())) {
+                logger.info("ttttt");
+                return ResponseEntity.ok(new ApiResponse(true, "Verified"));
+            } else {
+                logger.info("rrrrr");
+
+                return ResponseEntity.ok(new ApiResponse(true, "Not Verified"));
+            }
+        }
+        logger.info("eeee");
+
+        return ResponseEntity.ok(new ApiResponse(false, "Not Verified"));
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        if(userRepository.existsByUsername(signUpRequest.getUsername())) {
+        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
                     HttpStatus.BAD_REQUEST);
         }
 
-        if(userRepository.existsByEmail(signUpRequest.getEmail())) {
+        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
                     HttpStatus.BAD_REQUEST);
         }
@@ -109,7 +129,7 @@ public class AuthController {
         // Creating user's account
         User user = new User(signUpRequest.getName(), signUpRequest.getUsername(),
                 signUpRequest.getEmail(), signUpRequest.getPassword(),
-                signUpRequest.getQuestion(),signUpRequest.getAnswer());
+                signUpRequest.getQuestion(), signUpRequest.getAnswer());
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
