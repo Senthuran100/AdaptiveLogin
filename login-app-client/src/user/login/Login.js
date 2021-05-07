@@ -49,7 +49,8 @@ class Login extends Component {
             <div className="login-container" >
                 <h1 className="page-title">Login</h1>
                 <div className="login-content">
-                    <AntWrappedLoginForm onLogin={this.props.onLogin} mouseObject={this.props.mouseObject} />
+                    <AntWrappedLoginForm onLogin={this.props.onLogin} mouseObject={this.props.mouseObject}
+                        adaptiveLogin={this.props.adaptiveLogin} />
                 </div>
             </div>
         );
@@ -94,7 +95,7 @@ class LoginForm extends Component {
             , windowClient.getDeviceVendor(), windowClient.getColorDepth(), windowClient.getCurrentResolution(), windowClient.isFlash(), windowClient.getMimeTypes(),
             windowClient.isMimeTypes()
         );
-        console.log('windowClient', windowClient);
+        
         fetch(
             "https://geolocation-db.com/json/0f761a30-fe14-11e9-b59f-e53803842572"
         )
@@ -233,7 +234,12 @@ class LoginForm extends Component {
                 login(loginRequest)
                     .then(response => {
                         localStorage.setItem(ACCESS_TOKEN, response.accessToken);
-                        this.props.onLogin();
+                        console.log('response', response);
+                        if (response.authfactor === 'security_question') {
+                            this.props.adaptiveLogin();
+                        } else {
+                            this.props.onLogin();
+                        }
                     }).catch(error => {
                         if (error.status === 401) {
                             notification.error({

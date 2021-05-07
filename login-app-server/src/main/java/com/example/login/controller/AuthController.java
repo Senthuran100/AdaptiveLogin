@@ -86,7 +86,7 @@ public class AuthController {
             UserLoginParam userLoginParam= new UserLoginParam(user.getUsername(),date,loginRequest.getBrowser().toString(),
                     loginRequest.getLocation().toString(),loginRequest.getMouseEvent().toString(),loginRequest.getKeyBoardEvent().toString(),loginRequest.getBrowserInfo().toString());
             userLoginParamRepo.save(userLoginParam);
-            return ResponseEntity.ok(new JwtAuthenticationResponse(jwt,"Event is Stored"));
+            return ResponseEntity.ok(new JwtAuthenticationResponse(jwt,"Event is Stored","security_question"));
         }
 
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
@@ -106,7 +106,8 @@ public class AuthController {
 
         // Creating user's account
         User user = new User(signUpRequest.getName(), signUpRequest.getUsername(),
-                signUpRequest.getEmail(), signUpRequest.getPassword(),signUpRequest.getQuestion(),signUpRequest.getAnswer());
+                signUpRequest.getEmail(), signUpRequest.getPassword(),
+                signUpRequest.getQuestion(),signUpRequest.getAnswer());
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 

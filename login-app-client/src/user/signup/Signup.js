@@ -47,7 +47,7 @@ class Signup extends Component {
     }
 
     handleInputChange(event, validationFun) {
-        console.log('event', event, event.target);
+        // console.log('event', event, event.target);
         const target = event.target;
         const inputName = target.name;
         const inputValue = target.value;
