@@ -24,7 +24,6 @@ let leftClick = 0;
 let mouseDown = 0;
 let mouseUp = 0;
 let mouseObject
-// let timestamp = Date.now();
 class App extends Component {
 
 
@@ -178,7 +177,7 @@ class App extends Component {
                 render={(props) => <LoginHome isAuthenticated={this.state.isAuthenticated} username={this.state.currentUser} {...props} />}>
               </Route>
               {this.state.secondAuthentication && <Route path="/adaptiveLogin"
-                render={(props) => <AdaptiveOutput {...props} />}
+                render={(props) => <AdaptiveOutput username={this.state.currentUser} {...props} />}
               ></Route>}
               <Route path="/login"
                 render={(props) => !this.state.isAuthenticated ?

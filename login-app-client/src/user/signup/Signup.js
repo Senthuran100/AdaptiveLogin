@@ -6,7 +6,8 @@ import {
     NAME_MIN_LENGTH, NAME_MAX_LENGTH,
     USERNAME_MIN_LENGTH, USERNAME_MAX_LENGTH,
     EMAIL_MAX_LENGTH,
-    PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH
+    PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH,
+    SECURITY_ANS_MAX_LENGTH, SECURITY_ANS_MIN_LENGTH
 } from '../../constants';
 import 'antd/dist/antd.css';
 import { Form, Input, Button, notification, Select } from 'antd';
@@ -229,15 +230,15 @@ class Signup extends Component {
     }
 
     validateAnswer = (amswer) => {
-        if (amswer.length < NAME_MIN_LENGTH) {
+        if (amswer.length < SECURITY_ANS_MIN_LENGTH) {
             return {
                 validateStatus: 'error',
-                errorMsg: `Answer is too short (Minimum ${NAME_MIN_LENGTH} characters needed.)`
+                errorMsg: `Answer is too short (Minimum ${SECURITY_ANS_MIN_LENGTH} characters needed.)`
             }
-        } else if (amswer.length > NAME_MAX_LENGTH) {
+        } else if (amswer.length > SECURITY_ANS_MAX_LENGTH) {
             return {
                 validationStatus: 'error',
-                errorMsg: `Answer is too long (Maximum ${NAME_MAX_LENGTH} characters allowed.)`
+                errorMsg: `Answer is too long (Maximum ${SECURITY_ANS_MAX_LENGTH} characters allowed.)`
             }
         } else {
             return {

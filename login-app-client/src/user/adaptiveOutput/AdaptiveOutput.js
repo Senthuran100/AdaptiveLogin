@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Input, Button, Select } from 'antd';
-import { NAME_MIN_LENGTH, NAME_MAX_LENGTH } from '../../constants';
+import { SECURITY_ANS_MIN_LENGTH, SECURITY_ANS_MAX_LENGTH } from '../../constants';
 import './AdaptiveOutput.css';
 
 const FormItem = Form.Item;
@@ -23,6 +23,12 @@ class AdaptiveOutput extends Component {
         this.handleSecurityQuestion = this.handleSecurityQuestion.bind(this);
     }
 
+    componentDidMount() {
+        const username = this.props.username;
+        console.log('username', username);
+        // this.loadUserProfile(username);
+    }
+
     handleInputChange(event, validationFun) {
         // console.log('event', event, event.target);
         const target = event.target;
@@ -39,24 +45,26 @@ class AdaptiveOutput extends Component {
     }
 
     handleSubmit(event) {
+        console.log('adaptiveRequest', this.props.username);
 
         const adaptiveRequest = {
+            username: this.props.username,
             question: this.state.question.value,
             answer: this.state.answer.value
         };
-console.log('adaptiveRequest',adaptiveRequest);
+        console.log('adaptiveRequest', adaptiveRequest);
     }
 
     validateAnswer = (amswer) => {
-        if (amswer.length < NAME_MIN_LENGTH) {
+        if (amswer.length < SECURITY_ANS_MIN_LENGTH) {
             return {
                 validateStatus: 'error',
-                errorMsg: `Answer is too short (Minimum ${NAME_MIN_LENGTH} characters needed.)`
+                errorMsg: `Answer is too short (Minimum ${SECURITY_ANS_MIN_LENGTH} characters needed.)`
             }
-        } else if (amswer.length > NAME_MAX_LENGTH) {
+        } else if (amswer.length > SECURITY_ANS_MAX_LENGTH) {
             return {
                 validationStatus: 'error',
-                errorMsg: `Answer is too long (Maximum ${NAME_MAX_LENGTH} characters allowed.)`
+                errorMsg: `Answer is too long (Maximum ${SECURITY_ANS_MAX_LENGTH} characters allowed.)`
             }
         } else {
             return {
