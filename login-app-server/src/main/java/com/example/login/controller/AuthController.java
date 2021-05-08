@@ -92,23 +92,17 @@ public class AuthController {
     @PostMapping("/secondLogin")
     public ResponseEntity<?> secondLogin(@Valid @RequestBody AdaptiveAuthRequest adaptiveAuthRequest) {
         logger.info("----Adaptive-----"+adaptiveAuthRequest.getUsername(),adaptiveAuthRequest.getQuestion(),adaptiveAuthRequest.getAnswer());
-        logger.info("----Adaptive111-----"+adaptiveAuthRequest.getQuestion(),adaptiveAuthRequest.getAnswer());
-        logger.info("----Adaptive222-----"+adaptiveAuthRequest.getAnswer());
-
 
         if (userRepository.existsByUsername(adaptiveAuthRequest.getUsername()) || userRepository.existsByEmail(adaptiveAuthRequest.getUsername())) {
             User user = userRepository.findByUsernameOrEmail(adaptiveAuthRequest.getUsername(), adaptiveAuthRequest.getUsername())
                     .orElseThrow(() ->
                             new UsernameNotFoundException("User not found with username or email : " + adaptiveAuthRequest.getUsername()));
             if (user.getQuestion().equals(adaptiveAuthRequest.getQuestion()) && user.getAnswer().toLowerCase().equals(adaptiveAuthRequest.getAnswer().toLowerCase())) {
-                logger.info("ttttt");
                 return ResponseEntity.ok().body(new ApiResponse(true, "Verified"));
             } else {
-                logger.info("rrrrr");
                 return ResponseEntity.ok().body(new ApiResponse(true, "Not Verified"));
             }
         }
-        logger.info("eeee");
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true, "Not Verified"));
     }
 
