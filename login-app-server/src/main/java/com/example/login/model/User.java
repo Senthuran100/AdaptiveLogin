@@ -22,9 +22,7 @@ import java.util.Set;
         })
 })
 public class User extends DateAudit {
-    /**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 6821937451648298034L;
 
 	@Id
@@ -56,6 +54,9 @@ public class User extends DateAudit {
 //    @NotBlank
     @Size(max = 100)
     private String answer;
+
+    @Size(max = 100)
+    private String code;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
@@ -138,5 +139,13 @@ public class User extends DateAudit {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

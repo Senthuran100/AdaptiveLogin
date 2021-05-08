@@ -11,6 +11,7 @@ import com.example.login.repository.UserLoginParamRepo;
 import com.example.login.repository.UserRepository;
 import com.example.login.security.JwtTokenProvider;
 
+import com.example.login.service.EmailSenderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,11 @@ public class AuthController {
     @Autowired
     UserLoginParamRepo userLoginParamRepo;
 
+    @Autowired
+    private EmailSenderService service;
+
+    public String authenticationMethod = "OTP";
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         logger.info("--- loginRequest browser ----" + loginRequest.getBrowser());
@@ -83,7 +89,12 @@ public class AuthController {
             UserLoginParam userLoginParam = new UserLoginParam(user.getUsername(), date, loginRequest.getBrowser().toString(),
                     loginRequest.getLocation().toString(), loginRequest.getMouseEvent().toString(), loginRequest.getKeyBoardEvent().toString(), loginRequest.getBrowserInfo().toString());
             userLoginParamRepo.save(userLoginParam);
-            return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", "security_question",user.getUsername()));
+            if(authenticationMethod.equals("OTP")){
+                service.generateCode(user.getEmail());
+                return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", authenticationMethod, user.getUsername()));
+            } else {
+                return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", "security_question", user.getUsername()));
+            }
         }
 
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));

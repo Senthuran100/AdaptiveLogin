@@ -11,49 +11,51 @@ import com.example.login.model.Role;
 import com.example.login.model.RoleName;
 
 import javax.annotation.PostConstruct;
-import java.util.TimeZone; 
+import java.util.TimeZone;
+
 import com.example.login.repository.RoleRepository;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+
 import javax.mail.MessagingException;
 
 @SpringBootApplication
 @EntityScan(basePackageClasses = {
-		LoginApplication.class,
-		Jsr310JpaConverters.class
+        LoginApplication.class,
+        Jsr310JpaConverters.class
 })
 public class LoginApplication {
-	@Autowired
+    @Autowired
     RoleRepository roleRepository;
-	@Autowired
-	private EmailSenderService service;
+    @Autowired
+    private EmailSenderService service;
 
-	@PostConstruct
-	void init() {
-		Boolean userRoleExists = roleRepository.findByName(RoleName.ROLE_USER).isPresent();
-		Boolean userAdminExists = roleRepository.findByName(RoleName.ROLE_ADMIN).isPresent();
-		if(!userRoleExists) {
-			Role r=new Role();
-			r.setName(RoleName.ROLE_USER);		
-			roleRepository.save(r);			
-		}
-		if(!userAdminExists) {
-			Role r=new Role();
-			r.setName(RoleName.ROLE_ADMIN);		
-			roleRepository.save(r);			
-		}
-		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-	}
+    @PostConstruct
+    void init() {
+        Boolean userRoleExists = roleRepository.findByName(RoleName.ROLE_USER).isPresent();
+        Boolean userAdminExists = roleRepository.findByName(RoleName.ROLE_ADMIN).isPresent();
+        if (!userRoleExists) {
+            Role r = new Role();
+            r.setName(RoleName.ROLE_USER);
+            roleRepository.save(r);
+        }
+        if (!userAdminExists) {
+            Role r = new Role();
+            r.setName(RoleName.ROLE_ADMIN);
+            roleRepository.save(r);
+        }
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(LoginApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(LoginApplication.class, args);
+    }
 
-	@EventListener(ApplicationReadyEvent.class)
-	public void triggerMail() throws MessagingException {
+    @EventListener(ApplicationReadyEvent.class)
+    public void triggerMail() throws MessagingException {
 
-		service.sendSimpleEmail("senthuran.manoharan@gmail.com","Hello","Hello world");
-
-	}
+//        service.sendSimpleEmail("senthuran.manoharan@gmail.com", "Hello", "Hello world");
+//        service.generateCode("senthuran.manoharan@gmail.com");
+    }
 }
