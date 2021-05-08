@@ -13,6 +13,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.util.Random;
+import java.util.logging.Logger;
 
 @Service
 public class EmailSenderService {
@@ -22,6 +23,9 @@ public class EmailSenderService {
 
     @Autowired
     private UserRepository userRepository;
+
+    private final static Logger logger = Logger.getLogger(EmailSenderService.class.getName());
+
 
     public static String getRandomNumberString() {
 
@@ -46,22 +50,27 @@ public class EmailSenderService {
         System.out.println("Mail Send...");
     }
 
-    public void generateCode(String toEmail) {
-        User user = userRepository.findByEmail(toEmail);
-        String code = getRandomNumberString();
-        System.out.println("------Code-----"+code);
-        user.setCode(code);
-        userRepository.save(user);
+    public String generateCode(String toEmail) {
+        try {
+            User user = userRepository.findByEmail(toEmail);
+            String code = getRandomNumberString();
+            logger.info("------Code-----" + code);
+            user.setCode(code);
+            userRepository.save(user);
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("senthuran.2019537@iit.ac.lk");
-        message.setTo(toEmail);
-        message.setText("Please use the code for Authentication: " + code);
-        message.setSubject("Adaptive Auth Application");
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom("senthuran.2019537@iit.ac.lk");
+            message.setTo(toEmail);
+            message.setText("Please use the code for Authentication: " + code);
+            message.setSubject("Adaptive Auth Application");
 
-        mailSender.send(message);
-        System.out.println("Mail Send...");
-
+            mailSender.send(message);
+            logger.info("Mail Send...");
+            return "Success";
+        } catch (Exception e){
+            logger.info("Exception  "+e);
+        }
+        return "Failure";
     }
 
     public void sendEmailWithAttachment(String toEmail,

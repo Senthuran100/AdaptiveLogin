@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Form, Input, Button, Select, notification } from 'antd';
-import { SECURITY_ANS_MIN_LENGTH, SECURITY_ANS_MAX_LENGTH, OTP_CODE_LENGTH } from '../../constants';
+import { SECURITY_ANS_MIN_LENGTH, SECURITY_ANS_MAX_LENGTH, OTP_CODE_LENGTH, USERNAME, AUTHFACTOR } from '../../constants';
 import './AdaptiveOutput.css';
-import { secondLogin } from '../../util/APIUtils';
+import { secondLogin, generateOTPCode } from '../../util/APIUtils';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -21,7 +21,6 @@ class AdaptiveOutput extends Component {
             code: {
                 value: '',
             }
-
         }
         this.handleInputChange = this.handleInputChange.bind(this);
         this.isFormInvalid = this.isFormInvalid.bind(this);
@@ -31,11 +30,26 @@ class AdaptiveOutput extends Component {
     componentDidMount() {
         const username = this.props.username;
         console.log('username', username);
-        this.setState({ authfactor: localStorage.getItem('authfactor') });
+        this.setState({ authfactor: localStorage.getItem(AUTHFACTOR) });
+        if (localStorage.getItem(AUTHFACTOR) === 'OTP') {
+            generateOTPCode({ username: localStorage.getItem(USERNAME) })
+                .then(response => {
+                    if (response.message === 'Success') {
+                        notification.success({
+                            message: 'Adaptive Auth',
+                            description: 'OTP code is sent to your email ID'
+                        });
+                    } else {
+                        notification.error({
+                            message: 'Adaptive Auth',
+                            description: 'Failure in sending OTP.Please try contact your admin'
+                        });
+                    }
+                })
+        }
     }
 
     handleInputChange(event, validationFun) {
-        // console.log('event', event, event.target);
         const target = event.target;
         const inputName = target.name;
         const inputValue = target.value;
@@ -71,7 +85,7 @@ class AdaptiveOutput extends Component {
                 } else {
                     notification.error({
                         message: 'Adaptive Auth',
-                        description: "Please Try Again.",
+                        description: "Entered Data is InValid.Please Try Again.",
                     });
                 }
             }).catch(error => {

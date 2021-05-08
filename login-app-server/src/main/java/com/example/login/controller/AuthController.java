@@ -23,10 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -61,7 +58,7 @@ public class AuthController {
     @Autowired
     private EmailSenderService service;
 
-    public String authenticationMethod = "normal";  // security_question  OTP
+    public String authenticationMethod = "OTP";  // security_question  OTP   normal
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -90,7 +87,7 @@ public class AuthController {
                     loginRequest.getLocation().toString(), loginRequest.getMouseEvent().toString(), loginRequest.getKeyBoardEvent().toString(), loginRequest.getBrowserInfo().toString());
             userLoginParamRepo.save(userLoginParam);
             if (authenticationMethod.equals("OTP")) {
-                service.generateCode(user.getEmail());
+//                service.generateCode(user.getEmail());
                 return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", authenticationMethod, user.getUsername()));
             } else if (authenticationMethod.equals("security_question")) {
                 return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", authenticationMethod, user.getUsername()));
@@ -158,5 +155,24 @@ public class AuthController {
                 .buildAndExpand(result.getUsername()).toUri();
 
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+    }
+
+    @PostMapping("/generateCode")
+    public ResponseEntity<?> generateOTPCode(@Valid @RequestBody GenerateCode generateCode) {
+
+        if (userRepository.existsByUsername(generateCode.getUsername()) || userRepository.existsByEmail(generateCode.getUsername())) {
+
+            User user = userRepository.findByUsernameOrEmail(generateCode.getUsername(), generateCode.getUsername())
+                    .orElseThrow(() ->
+                            new UsernameNotFoundException("User not found with username or email : " + generateCode.getUsername()));
+
+            String response = service.generateCode(user.getEmail());
+            if (response.equals("Success")) {
+                return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true, "Success"));
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true, "Failure"));
+            }
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true, "Username/Email does not exsist"));
     }
 }

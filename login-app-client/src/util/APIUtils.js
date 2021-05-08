@@ -51,6 +51,14 @@ export function secondLogin(secondLoginRequest) {
     });
 }
 
+export function generateOTPCode(generateCodeRequest) {
+    return request({
+        url: API_BASE_URL + "/auth/generateCode",
+        method: 'POST',
+        body: JSON.stringify(generateCodeRequest)
+    });
+}
+
 export function checkUsernameAvailability(username) {
     return request({
         url: API_BASE_URL + "/user/checkUsernameAvailability?username=" + username,
