@@ -1,5 +1,6 @@
 package com.example.login;
 
+import com.example.login.service.EmailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +14,10 @@ import javax.annotation.PostConstruct;
 import java.util.TimeZone; 
 import com.example.login.repository.RoleRepository;
 
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import javax.mail.MessagingException;
+
 @SpringBootApplication
 @EntityScan(basePackageClasses = {
 		LoginApplication.class,
@@ -21,6 +26,8 @@ import com.example.login.repository.RoleRepository;
 public class LoginApplication {
 	@Autowired
     RoleRepository roleRepository;
+	@Autowired
+	private EmailSenderService service;
 
 	@PostConstruct
 	void init() {
@@ -41,5 +48,12 @@ public class LoginApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(LoginApplication.class, args);
+	}
+
+	@EventListener(ApplicationReadyEvent.class)
+	public void triggerMail() throws MessagingException {
+
+		service.sendSimpleEmail("senthuran.manoharan@gmail.com","Hello","Hello world");
+
 	}
 }
