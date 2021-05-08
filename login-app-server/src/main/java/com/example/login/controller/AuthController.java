@@ -61,7 +61,7 @@ public class AuthController {
     @Autowired
     private EmailSenderService service;
 
-    public String authenticationMethod = "OTP";
+    public String authenticationMethod = "normal";  // security_question  OTP
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -89,11 +89,13 @@ public class AuthController {
             UserLoginParam userLoginParam = new UserLoginParam(user.getUsername(), date, loginRequest.getBrowser().toString(),
                     loginRequest.getLocation().toString(), loginRequest.getMouseEvent().toString(), loginRequest.getKeyBoardEvent().toString(), loginRequest.getBrowserInfo().toString());
             userLoginParamRepo.save(userLoginParam);
-            if(authenticationMethod.equals("OTP")){
+            if (authenticationMethod.equals("OTP")) {
                 service.generateCode(user.getEmail());
                 return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", authenticationMethod, user.getUsername()));
+            } else if (authenticationMethod.equals("security_question")) {
+                return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", authenticationMethod, user.getUsername()));
             } else {
-                return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", "security_question", user.getUsername()));
+                return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", "normal", user.getUsername()));
             }
         }
 
@@ -102,16 +104,24 @@ public class AuthController {
 
     @PostMapping("/secondLogin")
     public ResponseEntity<?> secondLogin(@Valid @RequestBody AdaptiveAuthRequest adaptiveAuthRequest) {
-        logger.info("----Adaptive-----"+adaptiveAuthRequest.getUsername(),adaptiveAuthRequest.getQuestion(),adaptiveAuthRequest.getAnswer());
+        logger.info("----Adaptive-----" + adaptiveAuthRequest.getUsername(), adaptiveAuthRequest.getQuestion(), adaptiveAuthRequest.getAnswer());
 
         if (userRepository.existsByUsername(adaptiveAuthRequest.getUsername()) || userRepository.existsByEmail(adaptiveAuthRequest.getUsername())) {
             User user = userRepository.findByUsernameOrEmail(adaptiveAuthRequest.getUsername(), adaptiveAuthRequest.getUsername())
                     .orElseThrow(() ->
                             new UsernameNotFoundException("User not found with username or email : " + adaptiveAuthRequest.getUsername()));
-            if (user.getQuestion().equals(adaptiveAuthRequest.getQuestion()) && user.getAnswer().toLowerCase().equals(adaptiveAuthRequest.getAnswer().toLowerCase())) {
-                return ResponseEntity.ok().body(new ApiResponse(true, "Verified"));
-            } else {
-                return ResponseEntity.ok().body(new ApiResponse(true, "Not Verified"));
+            if (adaptiveAuthRequest.getAuthFactor().equals("security_question")) {
+                if (user.getQuestion().equals(adaptiveAuthRequest.getQuestion()) && user.getAnswer().toLowerCase().equals(adaptiveAuthRequest.getAnswer().toLowerCase())) {
+                    return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true, "Verified"));
+                } else {
+                    return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true, "Not Verified"));
+                }
+            } else if (adaptiveAuthRequest.getAuthFactor().equals("OTP")) {
+                if (user.getCode().equals(adaptiveAuthRequest.getCode())) {
+                    return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true, "Verified"));
+                } else {
+                    return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true, "Not Verified"));
+                }
             }
         }
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse(true, "Not Verified"));

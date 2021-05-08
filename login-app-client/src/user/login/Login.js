@@ -3,7 +3,7 @@ import { login } from '../../util/APIUtils';
 import { currentTime, arraySum } from '../../util/Helpers';
 import './Login.css';
 import { Link } from 'react-router-dom';
-import { ACCESS_TOKEN,USERNAME } from '../../constants';
+import { ACCESS_TOKEN, USERNAME, AUTHFACTOR } from '../../constants';
 import 'antd/dist/antd.css';
 import { Form, Input, Button, Icon, notification } from 'antd';
 import ClientJS from 'clientjs';
@@ -95,7 +95,7 @@ class LoginForm extends Component {
             , windowClient.getDeviceVendor(), windowClient.getColorDepth(), windowClient.getCurrentResolution(), windowClient.isFlash(), windowClient.getMimeTypes(),
             windowClient.isMimeTypes()
         );
-        
+
         fetch(
             "https://geolocation-db.com/json/0f761a30-fe14-11e9-b59f-e53803842572"
         )
@@ -231,12 +231,14 @@ class LoginForm extends Component {
                 values.browserInfo = browserInfo
                 const loginRequest = Object.assign({}, values);
                 console.log('values', loginRequest);
+                this.setState({ isLoading: true })
                 login(loginRequest)
                     .then(response => {
+                        this.setState({ isLoading: false })
                         localStorage.setItem(ACCESS_TOKEN, response.accessToken);
-                        localStorage.setItem(USERNAME,response.username)
-                        console.log('response', response);
-                        if (response.authfactor === 'security_question') {
+                        localStorage.setItem(USERNAME, response.username)
+                        if (response.authfactor === 'security_question' || response.authfactor === 'OTP') {
+                            localStorage.setItem(AUTHFACTOR, response.authfactor);
                             this.props.adaptiveLogin();
                         } else {
                             this.props.onLogin();
@@ -354,7 +356,8 @@ class LoginForm extends Component {
                     )}
                 </FormItem>
                 <FormItem>
-                    <Button type="primary" htmlType="submit" size="large" className="login-form-button" style={{ "width": "500px" }}>Login</Button>
+                    <Button type="primary" htmlType="submit" size="large" className="login-form-button" style={{ "width": "500px" }}
+                     loading={this.state.isLoading}>Login</Button>
                     Or <Link to="/signup">register now!!!</Link>
                 </FormItem>
             </Form>

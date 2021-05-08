@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Input, Button, Select, notification } from 'antd';
-import { SECURITY_ANS_MIN_LENGTH, SECURITY_ANS_MAX_LENGTH } from '../../constants';
+import { SECURITY_ANS_MIN_LENGTH, SECURITY_ANS_MAX_LENGTH, OTP_CODE_LENGTH } from '../../constants';
 import './AdaptiveOutput.css';
 import { secondLogin } from '../../util/APIUtils';
 
@@ -16,10 +16,14 @@ class AdaptiveOutput extends Component {
             },
             answer: {
                 value: ''
+            },
+            authfactor: '',
+            code: {
+                value: '',
             }
+
         }
         this.handleInputChange = this.handleInputChange.bind(this);
-        // this.handleSubmit = this.handleSubmit.bind(this);
         this.isFormInvalid = this.isFormInvalid.bind(this);
         this.handleSecurityQuestion = this.handleSecurityQuestion.bind(this);
     }
@@ -27,7 +31,7 @@ class AdaptiveOutput extends Component {
     componentDidMount() {
         const username = this.props.username;
         console.log('username', username);
-        // this.loadUserProfile(username);
+        this.setState({ authfactor: localStorage.getItem('authfactor') });
     }
 
     handleInputChange(event, validationFun) {
@@ -45,7 +49,7 @@ class AdaptiveOutput extends Component {
         });
     }
 
-     handleSubmit =(event) =>{
+    handleSubmit = (event) => {
         event.preventDefault();
 
         console.log('adaptiveRequest', this.props.username);
@@ -53,7 +57,9 @@ class AdaptiveOutput extends Component {
         const adaptiveRequest = {
             username: localStorage.getItem('username'),
             question: this.state.question.value,
-            answer: this.state.answer.value
+            answer: this.state.answer.value,
+            authFactor: localStorage.getItem('authfactor'),
+            code: this.state.code.value
         };
 
         secondLogin(adaptiveRequest)
@@ -66,7 +72,7 @@ class AdaptiveOutput extends Component {
                     notification.error({
                         message: 'Adaptive Auth',
                         description: "Please Try Again.",
-                    }); 
+                    });
                 }
             }).catch(error => {
                 notification.error({
@@ -97,46 +103,81 @@ class AdaptiveOutput extends Component {
         }
     }
 
+    validateOTPCode = (code) => {
+        if (code.length < OTP_CODE_LENGTH) {
+            return {
+                validateStatus: 'error',
+                errorMsg: `OTP Code is too short (Minimum ${OTP_CODE_LENGTH} characters needed.)`
+            }
+        } else if (code.length > OTP_CODE_LENGTH) {
+            return {
+                validationStatus: 'error',
+                errorMsg: `OTP Code is too long (Maximum ${OTP_CODE_LENGTH} characters allowed.)`
+            }
+        } else {
+            return {
+                validateStatus: 'success',
+                errorMsg: null,
+            };
+        }
+    }
+
     handleSecurityQuestion = (event) => {
         console.log('ec', event);
         this.setState({ question: { value: event } })
     }
 
     isFormInvalid() {
-        return !(this.state.answer.validateStatus === 'success');
+        return !(this.state.answer.validateStatus === 'success' || this.state.code.validateStatus === 'success');
     }
 
     render() {
         return (
             <div className="signup-container">
                 <Form onSubmit={this.handleSubmit} className="login-form" onMouseDown={this.handleEvent} onMouseUp={this.handleEvent} >
-                    <FormItem
-                        label="Security Question" required>
-                        <Select
-                            size="large"
-                            name="Securityquestion"
-                            value={this.state.question.value}
-                            onChange={(event) => this.handleSecurityQuestion(event)} >
-                            <Option value="question1">What is your favourite colour?</Option>
-                            <Option value="question2">What is your mother's maiden name?</Option>
-                            <Option value="question3">What is the name of your first pet?</Option>
-                            <Option value="question4">What is the name of the town where you were born?</Option>
-                            <Option value="question5">What is your favourite movie?</Option>
-                        </Select>
-                    </FormItem>
-                    <FormItem label="Security Answer"
+                    {this.state.authfactor === 'security_question' ? (
+                        <div>
+                            <FormItem
+                                label="Security Question" required>
+                                <Select
+                                    size="large"
+                                    name="Securityquestion"
+                                    value={this.state.question.value}
+                                    onChange={(event) => this.handleSecurityQuestion(event)} >
+                                    <Option value="question1">What is your favourite colour?</Option>
+                                    <Option value="question2">What is your mother's maiden name?</Option>
+                                    <Option value="question3">What is the name of your first pet?</Option>
+                                    <Option value="question4">What is the name of the town where you were born?</Option>
+                                    <Option value="question5">What is your favourite movie?</Option>
+                                </Select>
+                            </FormItem>
+                            <FormItem label="Security Answer"
+                                hasFeedback
+                                validateStatus={this.state.answer.validateStatus}
+                                help={this.state.answer.errorMsg}
+                            >
+                                <Input
+                                    size="large"
+                                    name="answer"
+                                    autoComplete="off"
+                                    placeholder="Your Security Answer"
+                                    value={this.state.answer.value}
+                                    onChange={(event) => this.handleInputChange(event, this.validateAnswer)} />
+                            </FormItem>
+                        </div>
+                    ) : <FormItem label="OTP Code"
                         hasFeedback
-                        validateStatus={this.state.answer.validateStatus}
-                        help={this.state.answer.errorMsg}
+                        validateStatus={this.state.code.validateStatus}
+                        help={this.state.code.errorMsg}
                     >
                         <Input
                             size="large"
-                            name="answer"
+                            name="code"
                             autoComplete="off"
-                            placeholder="Your Security Answer"
-                            value={this.state.answer.value}
-                            onChange={(event) => this.handleInputChange(event, this.validateAnswer)} />
-                    </FormItem>
+                            placeholder="Please enter the 6 digit OTP Code"
+                            value={this.state.code.value}
+                            onChange={(event) => this.handleInputChange(event, this.validateOTPCode)} />
+                    </FormItem>}
                     <FormItem>
                         <Button type="primary"
                             htmlType="submit"

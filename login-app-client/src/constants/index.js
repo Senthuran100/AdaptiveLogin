@@ -2,6 +2,7 @@ export const API_BASE_URL = 'http://localhost:5000/api';
 // adaptiveloginv100-env.eba-eu68nqdq.ap-south-1.elasticbeanstalk.com
 export const ACCESS_TOKEN = 'accessToken';
 export const USERNAME = 'username';
+export const AUTHFACTOR = 'authfactor'
 
 export const NAME_MIN_LENGTH = 4;
 export const NAME_MAX_LENGTH = 40;
@@ -16,3 +17,5 @@ export const PASSWORD_MAX_LENGTH = 20;
 
 export const SECURITY_ANS_MIN_LENGTH = 2;
 export const SECURITY_ANS_MAX_LENGTH = 20;
+
+export const OTP_CODE_LENGTH = 6;

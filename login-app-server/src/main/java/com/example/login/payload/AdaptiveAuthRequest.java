@@ -8,12 +8,18 @@ public class AdaptiveAuthRequest {
     private String username;
 
     @NotBlank
+    private String authFactor;
+
+//    @NotBlank
     @Size(max = 20)
     private String question;
 
-    @NotBlank
+//    @NotBlank
     @Size(max = 20)
     private String answer;
+
+    @Size(max = 20)
+    private String code;
 
     public AdaptiveAuthRequest(String question, String answer) {
         this.question = question;
@@ -42,5 +48,21 @@ public class AdaptiveAuthRequest {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public String getAuthFactor() {
+        return authFactor;
+    }
+
+    public void setAuthFactor(String authFactor) {
+        this.authFactor = authFactor;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }
