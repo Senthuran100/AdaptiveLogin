@@ -244,6 +244,7 @@ class LoginForm extends Component {
                             this.props.onLogin();
                         }
                     }).catch(error => {
+                        this.setState({ isLoading: false })
                         if (error.status === 401) {
                             notification.error({
                                 message: 'Adaptive Auth',
