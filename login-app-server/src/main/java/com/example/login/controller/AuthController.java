@@ -58,7 +58,7 @@ public class AuthController {
     @Autowired
     private EmailSenderService service;
 
-    public String authenticationMethod = "OTP";  // security_question  OTP   normal
+    public String authenticationMethod = "normal";  // security_question  OTP   normal
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {

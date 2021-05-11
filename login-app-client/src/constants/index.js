@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://localhost:5000/api';
+export const API_BASE_URL = 'http://192.168.1.26:5000/api';
 // adaptiveloginv100-env.eba-eu68nqdq.ap-south-1.elasticbeanstalk.com
 export const ACCESS_TOKEN = 'accessToken';
 export const USERNAME = 'username';
