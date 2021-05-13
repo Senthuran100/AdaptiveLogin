@@ -57,7 +57,7 @@ public class BatchConfiguration {
         // query to select all the fields
 //        reader.setSql("SELECT username,datetime,browser,location,mouseevent,keyboardevent,browser_info FROM user_login_params");
         // query to select only the mouse event and keyboard event
-        reader.setSql("SELECT username,keyboardevent FROM user_login_params where id > 162");
+        reader.setSql("SELECT username,keyboardevent,mouseevent FROM user_login_params where id > 162");
         reader.setRowMapper(new UserRowMapper());
 
         return reader;
@@ -68,11 +68,11 @@ public class BatchConfiguration {
         @Override
         public UserLoginParam mapRow(ResultSet rs, int rowNum) throws SQLException {
             UserLoginParam user = new UserLoginParam();
-//            user.setUsername(rs.getString("username"));
+            user.setUsername(rs.getString("username"));
 //            user.setDatetime(rs.getDate("datetime"));
 //            user.setBrowser(rs.getString("browser"));
 //            user.setLocation(rs.getString("location"));
-//            user.setMouseevent(rs.getString("mouseevent"));
+            user.setMouseevent(rs.getString("mouseevent"));
             user.setKeyboardevent(rs.getString("keyboardevent"));
 //            user.setBrowser_info(rs.getString("browser_info"));
             return user;

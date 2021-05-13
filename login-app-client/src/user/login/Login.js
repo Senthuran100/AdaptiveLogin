@@ -87,14 +87,15 @@ class LoginForm extends Component {
         return stringHash(canvas.toDataURL());
     }
 
+    generateBrowserHash = () => {
+        const browserAttribute = [windowClient.getUserAgentLowerCase(), windowClient.getPlugins(), windowClient.getFonts(), windowClient.getMimeTypes()]
+        const deviceAttribute = [windowClient.getOS(), windowClient.getOSVersion(), windowClient.getCPU(), windowClient.getColorDepth(), windowClient.getCurrentResolution(),
+        windowClient.isJava() && windowClient.getJavaVersion(), windowClient.getLanguage()]
+        console.log('input', browserAttribute, deviceAttribute);
+        return { 'browserAttribute': stringHash(browserAttribute.join('-')), 'deviceAttribute': stringHash(deviceAttribute.join('-')) }
+    }
+
     componentDidMount() {
-        console.log('Mac', windowClient.getUserAgentLowerCase(), windowClient.getPlugins(),
-            windowClient.getTimeZone(), windowClient.getCanvasPrint(), windowClient.getFonts(), windowClient.getMimeTypes(),
-            windowClient.getCPU(), windowClient.getDevice(), windowClient.getSoftwareVersion(), windowClient.getAvailableResolution(), windowClient.getCanvasPrint(),
-            windowClient.getFingerprint(), windowClient.isLocalStorage(), windowClient.getSilverlightVersion(), windowClient.getDeviceType(), windowClient.getDevice()
-            , windowClient.getDeviceVendor(), windowClient.getColorDepth(), windowClient.getCurrentResolution(), windowClient.isFlash(), windowClient.getMimeTypes(),
-            windowClient.isMimeTypes()
-        );
 
         fetch(
             "https://geolocation-db.com/json/0f761a30-fe14-11e9-b59f-e53803842572"
@@ -130,13 +131,15 @@ class LoginForm extends Component {
         if (!!(element.getContext && element.getContext('2d'))) {
             canvasFingerPrint = this.canvasFingerPrint();
         }
-        console.log('canvasFingerPrint', canvasFingerPrint);
+        console.log('canvasFingerPrint', canvasFingerPrint, this.generateBrowserHash());
         browserInfo = {
             "UserAgent": windowClient.getUserAgentLowerCase(), "Plugins": windowClient.getPlugins(),
             "TimeZone": windowClient.getTimeZone(), "Fonts": windowClient.getFonts(), "MimeTypes": windowClient.getMimeTypes(),
             "CPU": windowClient.getCPU(), "Device": windowClient.getDevice(), "browser": windowClient.getBrowser(),
             "SoftwareVersion": windowClient.getSoftwareVersion(), "Resolution": windowClient.getAvailableResolution(),
-            "ColorDepth": windowClient.getColorDepth(), "canvasFingerPrint": canvasFingerPrint
+            "ColorDepth": windowClient.getColorDepth(), "browserVersion": windowClient.getBrowserVersion(), "OS": windowClient.getOS(),
+            "OS version": windowClient.getOSVersion(), "Engine": windowClient.getEngine(), "EngineVersion": windowClient.getEngineVersion(),
+            "canvasFingerPrint": canvasFingerPrint, ...this.generateBrowserHash()
         }
 
     }
@@ -200,7 +203,6 @@ class LoginForm extends Component {
             if (!err) {
 
                 if (browser) {
-                    console.log('details', this.state.details);
                     values.browser = browser;
                     values.location = this.state.details;
                 }
@@ -358,7 +360,7 @@ class LoginForm extends Component {
                 </FormItem>
                 <FormItem>
                     <Button type="primary" htmlType="submit" size="large" className="login-form-button" style={{ "width": "500px" }}
-                     loading={this.state.isLoading}>Login</Button>
+                        loading={this.state.isLoading}>Login</Button>
                     Or <Link to="/signup">register now!!!</Link>
                 </FormItem>
             </Form>
