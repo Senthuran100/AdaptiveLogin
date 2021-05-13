@@ -1,5 +1,7 @@
 package com.example.login;
 
+import com.example.login.model.UserFingerprint;
+import com.example.login.repository.UserFingerprintRepo;
 import com.example.login.service.EmailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -11,6 +13,8 @@ import com.example.login.model.Role;
 import com.example.login.model.RoleName;
 
 import javax.annotation.PostConstruct;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.TimeZone;
 
 import com.example.login.repository.RoleRepository;
@@ -28,8 +32,9 @@ import javax.mail.MessagingException;
 public class LoginApplication {
     @Autowired
     RoleRepository roleRepository;
+
     @Autowired
-    private EmailSenderService service;
+    private UserFingerprintRepo userFingerprintRepo;
 
     @PostConstruct
     void init() {
@@ -54,7 +59,12 @@ public class LoginApplication {
 
     @EventListener(ApplicationReadyEvent.class)
     public void triggerMail() throws MessagingException {
-
+        Set<String> hs = new HashSet<String>();
+        hs.add("12345677");
+        hs.add("7839930003");
+        UserFingerprint userFingerprint=new UserFingerprint(2,"ABC", hs,hs,hs);
+        userFingerprintRepo.save(userFingerprint);
+        System.out.println(userFingerprintRepo.findAll());
 //        service.sendSimpleEmail("senthuran.manoharan@gmail.com", "Hello", "Hello world");
 //        service.generateCode("senthuran.manoharan@gmail.com");
     }
