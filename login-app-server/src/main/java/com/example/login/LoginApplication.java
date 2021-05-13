@@ -63,7 +63,15 @@ public class LoginApplication {
         hs.add("12345677");
         hs.add("7839930003");
         UserFingerprint userFingerprint=new UserFingerprint(2,"ABC", hs,hs,hs);
+        UserFingerprint userFingerprint1=new UserFingerprint(2,"ABC1", hs,hs,hs);
+        UserFingerprint userFingerprint3=new UserFingerprint(3,"ABC1", hs,hs,hs);
+
+
         userFingerprintRepo.save(userFingerprint);
+        userFingerprintRepo.save(userFingerprint1);
+        userFingerprintRepo.save(userFingerprint3);
+
+
         System.out.println(userFingerprintRepo.findAll());
 //        service.sendSimpleEmail("senthuran.manoharan@gmail.com", "Hello", "Hello world");
 //        service.generateCode("senthuran.manoharan@gmail.com");

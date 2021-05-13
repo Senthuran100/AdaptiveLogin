@@ -18,7 +18,7 @@ public class LoginRequest {
 
     private Object keyBoardEvent;
 
-    private Object browserInfo;
+    private browserObject browserInfo;
 
     public String getUsernameOrEmail() {
         return usernameOrEmail;
@@ -72,7 +72,8 @@ public class LoginRequest {
         return browserInfo;
     }
 
-    public void setBrowserInfo(Object browserInfo) {
+    public void setBrowserInfo(browserObject browserInfo) {
         this.browserInfo = browserInfo;
     }
 }
+

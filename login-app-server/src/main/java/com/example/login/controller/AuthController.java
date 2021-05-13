@@ -1,5 +1,7 @@
 package com.example.login.controller;
 
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
 import com.example.login.exception.AppException;
 import com.example.login.model.Role;
 import com.example.login.model.RoleName;
@@ -12,6 +14,7 @@ import com.example.login.repository.UserRepository;
 import com.example.login.security.JwtTokenProvider;
 
 import com.example.login.service.EmailSenderService;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Date;
+import org.json.JSONObject;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -66,6 +70,7 @@ public class AuthController {
         logger.info("--- loginRequest location ---" + loginRequest.getLocation());
         logger.info("--- loginRequest mouseEvent ---" + loginRequest.getMouseEvent());
         logger.info("--- loginRequest keyBoardEvent ---" + loginRequest.getKeyBoardEvent());
+        logger.info("--- loginRequest BrowserInfo-" + loginRequest.getBrowserInfo());
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -86,8 +91,10 @@ public class AuthController {
             UserLoginParam userLoginParam = new UserLoginParam(user.getUsername(), date, loginRequest.getBrowser().toString(),
                     loginRequest.getLocation().toString(), loginRequest.getMouseEvent().toString(), loginRequest.getKeyBoardEvent().toString(), loginRequest.getBrowserInfo().toString());
             userLoginParamRepo.save(userLoginParam);
+            browserObject browserObject = new browserObject();
+            browserObject = (com.example.login.payload.browserObject) loginRequest.getBrowserInfo();
+            logger.info("browserInfo"+browserObject.getBrowserAttribute()+" "+browserObject.getCanvasFingerPrint());
             if (authenticationMethod.equals("OTP")) {
-//                service.generateCode(user.getEmail());
                 return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", authenticationMethod, user.getUsername()));
             } else if (authenticationMethod.equals("security_question")) {
                 return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", authenticationMethod, user.getUsername()));

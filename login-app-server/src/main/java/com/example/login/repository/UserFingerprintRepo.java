@@ -15,7 +15,7 @@ public class UserFingerprintRepo {
     private RedisTemplate template;
 
     public UserFingerprint save(UserFingerprint userFingerprint){
-        template.opsForHash().put(HASH_KEY,userFingerprint.getId(),userFingerprint);
+        template.opsForHash().put(HASH_KEY,userFingerprint.getUsername(),userFingerprint);
         System.out.println("Record Saved");
         return userFingerprint;
     }
