@@ -33,6 +33,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Date;
+
 import org.json.JSONObject;
 
 @RestController
@@ -91,14 +92,14 @@ public class AuthController {
             UserLoginParam userLoginParam = new UserLoginParam(user.getUsername(), date, loginRequest.getBrowser().toString(),
                     loginRequest.getLocation().toString(), loginRequest.getMouseEvent().toString(), loginRequest.getKeyBoardEvent().toString(), loginRequest.getBrowserInfo().toString());
             userLoginParamRepo.save(userLoginParam);
-            browserObject browserObject = new browserObject();
-            browserObject = (com.example.login.payload.browserObject) loginRequest.getBrowserInfo();
-            logger.info("browserInfo"+browserObject.getBrowserAttribute()+" "+browserObject.getCanvasFingerPrint());
+            browserObject browserObject = (com.example.login.payload.browserObject) loginRequest.getBrowserInfo();
+            logger.info("====browserInfo ====" + browserObject.getBrowserAttribute() + " " + browserObject.getCanvasFingerPrint() + " " + browserObject.getDeviceAttribute());
             if (authenticationMethod.equals("OTP")) {
                 return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", authenticationMethod, user.getUsername()));
             } else if (authenticationMethod.equals("security_question")) {
                 return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", authenticationMethod, user.getUsername()));
             } else {
+
                 return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", "normal", user.getUsername()));
             }
         }
