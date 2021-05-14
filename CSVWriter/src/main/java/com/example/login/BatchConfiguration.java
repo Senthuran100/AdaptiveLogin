@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
+
 import com.example.login.model.UserLoginParam;
 import com.example.login.model.browserObject;
 import org.springframework.batch.core.Job;
@@ -42,7 +43,7 @@ public class BatchConfiguration {
     @Bean
     public DataSource dataSource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        System.out.println("databaseURL "+databaseURL);
+        System.out.println("databaseURL " + databaseURL);
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/login_app");
         dataSource.setUsername("root");
@@ -52,29 +53,29 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public JdbcCursorItemReader<UserLoginParam> reader(){
+    public JdbcCursorItemReader<UserLoginParam> reader() {
         JdbcCursorItemReader<UserLoginParam> reader = new JdbcCursorItemReader<UserLoginParam>();
         reader.setDataSource(dataSource);
         // query to select all the fields
 //        reader.setSql("SELECT username,datetime,browser,location,mouseevent,keyboardevent,browser_info FROM user_login_params");
         // query to select only the mouse event and keyboard event
-        reader.setSql("SELECT browser FROM user_login_params where id > 162");
+        reader.setSql("SELECT username,mouseevent,keyboardevent FROM user_login_params where id > 162");
         reader.setRowMapper(new UserRowMapper());
 
         return reader;
     }
 
-    public class UserRowMapper implements RowMapper<UserLoginParam>{
+    public class UserRowMapper implements RowMapper<UserLoginParam> {
 
         @Override
         public UserLoginParam mapRow(ResultSet rs, int rowNum) throws SQLException {
             UserLoginParam user = new UserLoginParam();
-//            user.setUsername(rs.getString("username"));
+            user.setUsername(rs.getString("username"));
 //            user.setDatetime(rs.getDate("datetime"));
-            user.setBrowser(rs.getString("browser"));
+//            user.setBrowser(rs.getString("browser"));
 //            user.setLocation(rs.getString("location"));
-//            user.setMouseevent(rs.);
-//            user.setKeyboardevent(rs.getString("browser_info"));
+            user.setMouseevent(rs.getString("mouseevent"));
+            user.setKeyboardevent(rs.getString("keyboardevent"));
 //            user.setBrowser_info( rs.getString("browser_info"));
 //            user.getBrowser(rs.getString("browser"));
             return user;
@@ -83,22 +84,22 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public UserItemProcessor processor(){
+    public UserItemProcessor processor() {
         return new UserItemProcessor();
     }
 
     @Bean
-    public FlatFileItemWriter<UserLoginParam> writer(){
+    public FlatFileItemWriter<UserLoginParam> writer() {
         FlatFileItemWriter<UserLoginParam> writer = new FlatFileItemWriter<UserLoginParam>();
 //        writer.setResource(new ClassPathResource("LoginParam.csv"));
-        writer.setResource(new ClassPathResource("BrowserInfo.csv"));
+        writer.setResource(new ClassPathResource("KeyboardEvent.csv"));
         writer.setLineAggregator(new DelimitedLineAggregator<UserLoginParam>() {{
             setDelimiter(",");
             setFieldExtractor(new BeanWrapperFieldExtractor<UserLoginParam>() {{
                 // set all the fields.
 //                setNames(new String[] { "username", "datetime","browser","location","mouseevent","keyboardevent","browser_info" });
                 // set only the keyboard and mouse events
-                setNames(new String[] { "browser" });
+                setNames(new String[]{"username","mouseevent","keyboardevent"});
 
             }});
         }});
@@ -108,7 +109,7 @@ public class BatchConfiguration {
 
     @Bean
     public Step step1() {
-        return stepBuilderFactory.get("step1").<UserLoginParam, UserLoginParam> chunk(10)
+        return stepBuilderFactory.get("step1").<UserLoginParam, UserLoginParam>chunk(10)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer())

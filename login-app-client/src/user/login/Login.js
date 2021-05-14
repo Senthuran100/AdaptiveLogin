@@ -91,7 +91,6 @@ class LoginForm extends Component {
         const browserAttribute = [windowClient.getUserAgentLowerCase(), windowClient.getPlugins(), windowClient.getFonts(), windowClient.getMimeTypes()]
         const deviceAttribute = [windowClient.getOS(), windowClient.getOSVersion(), windowClient.getCPU(), windowClient.getColorDepth(), windowClient.getCurrentResolution(),
         windowClient.isJava() && windowClient.getJavaVersion(), windowClient.getLanguage()]
-        console.log('input', browserAttribute, deviceAttribute);
         return { 'browserAttribute': stringHash(browserAttribute.join('-')), 'deviceAttribute': stringHash(deviceAttribute.join('-')) }
     }
 
@@ -138,8 +137,8 @@ class LoginForm extends Component {
             "CPU": windowClient.getCPU(), "Device": windowClient.getDevice(), "browser": windowClient.getBrowser(),
             "SoftwareVersion": windowClient.getSoftwareVersion(), "Resolution": windowClient.getAvailableResolution(),
             "ColorDepth": windowClient.getColorDepth(), "browserVersion": windowClient.getBrowserVersion(), "OS": windowClient.getOS(),
-            "OS_version": windowClient.getOSVersion(),"Flash":windowClient.isFlash() && windowClient.getFlashVersion(), "Engine": windowClient.getEngine(), 
-            "EngineVersion": windowClient.getEngineVersion(),"canvasFingerPrint": canvasFingerPrint, ...this.generateBrowserHash()
+            "OS_version": windowClient.getOSVersion(), "Flash": windowClient.isFlash() && windowClient.getFlashVersion(), "Engine": windowClient.getEngine(),
+            "EngineVersion": windowClient.getEngineVersion(), "canvasFingerPrint": canvasFingerPrint, ...this.generateBrowserHash()
         }
 
     }
@@ -201,11 +200,13 @@ class LoginForm extends Component {
         event.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                const {CPU,TimeZone,Resolution,ColorDepth,Flash,UserAgent} = browserInfo;
-                const {country_code,country_name,state,city} = this.state.details;
+                const { CPU, TimeZone, Resolution, ColorDepth, Flash, UserAgent } = browserInfo;
+                const { country_code, country_name, state, city,IPv4 } = this.state.details;
                 if (browser) {
-                    values.browser = {...browser,CPU,TimeZone,Resolution,ColorDepth,Flash,
-                        UserAgent,country_code,country_name,state,city};
+                    values.browser = {
+                        ...browser, CPU, TimeZone, Resolution, ColorDepth, Flash,
+                        UserAgent, country_code, country_name, state, city, IPv4
+                    };
                     values.location = this.state.details;
                 }
                 dwellTimeSum = arraySum(dwellTimesArray, 'dwellTime')
@@ -295,12 +296,10 @@ class LoginForm extends Component {
         }
         if (endTimePassword !== 0 && startTimePassword !== 0) {
             timeDiffPassword = endTimePassword - startTimePassword;
-            // console.log('timeDiffUsername', timeDiffPassword);
             passwordWPS = passwordCount / timeDiffPassword;
         }
         if (endTimePassword !== 0 && startTimeUsername !== 0) {
             totalTimeSpent = endTimePassword - startTimeUsername;
-            // console.log('timeDiffUsername11', totalTimeSpent);
         }
 
     }

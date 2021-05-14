@@ -2,24 +2,18 @@ package com.example.login.model;
 
 public class browserObject {
     private String UserAgent;
-    private String Plugins;
     private String TimeZone;
-    private String Fonts;
-    private String MimeTypes;
+    private String Flash;
+    private String city;
+    private String country_code;
+    private String country_name;
     private String CPU;
-    private String Device;
-    private String browser;
-    private String SoftwareVersion;
+    private String name;
     private String Resolution;
     private String ColorDepth;
-    private String browserVersion;
-    private String OS;
-    private String OS_version;
-    private String Engine;
-    private String EngineVersion;
-    private Long canvasFingerPrint;
-    private Long browserAttribute;
-    private Long deviceAttribute;
+    private String os;
+    private String version;
+    private String state;
 
     public String getUserAgent() {
         return UserAgent;
@@ -27,14 +21,6 @@ public class browserObject {
 
     public void setUserAgent(String userAgent) {
         UserAgent = userAgent;
-    }
-
-    public String getPlugins() {
-        return Plugins;
-    }
-
-    public void setPlugins(String plugins) {
-        Plugins = plugins;
     }
 
     public String getTimeZone() {
@@ -45,20 +31,36 @@ public class browserObject {
         TimeZone = timeZone;
     }
 
-    public String getFonts() {
-        return Fonts;
+    public String getFlash() {
+        return Flash;
     }
 
-    public void setFonts(String fonts) {
-        Fonts = fonts;
+    public void setFlash(String flash) {
+        Flash = flash;
     }
 
-    public String getMimeTypes() {
-        return MimeTypes;
+    public String getCity() {
+        return city;
     }
 
-    public void setMimeTypes(String mimeTypes) {
-        MimeTypes = mimeTypes;
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCountry_code() {
+        return country_code;
+    }
+
+    public void setCountry_code(String country_code) {
+        this.country_code = country_code;
+    }
+
+    public String getCountry_name() {
+        return country_name;
+    }
+
+    public void setCountry_name(String country_name) {
+        this.country_name = country_name;
     }
 
     public String getCPU() {
@@ -69,28 +71,12 @@ public class browserObject {
         this.CPU = CPU;
     }
 
-    public String getDevice() {
-        return Device;
+    public String getName() {
+        return name;
     }
 
-    public void setDevice(String device) {
-        Device = device;
-    }
-
-    public String getBrowser() {
-        return browser;
-    }
-
-    public void setBrowser(String browser) {
-        this.browser = browser;
-    }
-
-    public String getSoftwareVersion() {
-        return SoftwareVersion;
-    }
-
-    public void setSoftwareVersion(String softwareVersion) {
-        SoftwareVersion = softwareVersion;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getResolution() {
@@ -109,67 +95,27 @@ public class browserObject {
         ColorDepth = colorDepth;
     }
 
-    public String getBrowserVersion() {
-        return browserVersion;
+    public String getOs() {
+        return os;
     }
 
-    public void setBrowserVersion(String browserVersion) {
-        this.browserVersion = browserVersion;
+    public void setOs(String os) {
+        this.os = os;
     }
 
-    public String getOS() {
-        return OS;
+    public String getVersion() {
+        return version;
     }
 
-    public void setOS(String OS) {
-        this.OS = OS;
+    public void setVersion(String version) {
+        this.version = version;
     }
 
-    public String getOS_version() {
-        return OS_version;
+    public String getState() {
+        return state;
     }
 
-    public void setOS_version(String OS_version) {
-        this.OS_version = OS_version;
-    }
-
-    public String getEngine() {
-        return Engine;
-    }
-
-    public void setEngine(String engine) {
-        Engine = engine;
-    }
-
-    public String getEngineVersion() {
-        return EngineVersion;
-    }
-
-    public void setEngineVersion(String engineVersion) {
-        EngineVersion = engineVersion;
-    }
-
-    public Long getCanvasFingerPrint() {
-        return canvasFingerPrint;
-    }
-
-    public void setCanvasFingerPrint(Long canvasFingerPrint) {
-        this.canvasFingerPrint = canvasFingerPrint;
-    }
-
-    public Long getBrowserAttribute() {
-        return browserAttribute;
-    }
-
-    public void setBrowserAttribute(Long browserAttribute) {
-        this.browserAttribute = browserAttribute;
-    }
-
-    public Long getDeviceAttribute() {
-        return deviceAttribute;
-    }
-
-    public void setDeviceAttribute(Long deviceAttribute) {
-        this.deviceAttribute = deviceAttribute;
+    public void setState(String state) {
+        this.state = state;
     }
 }

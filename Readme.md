@@ -1,7 +1,13 @@
 
 # Adaptive Auth
+
 <p align="center">
 <img  src="https://github.com/Senthuran100/AdaptiveLogin/blob/main/login-app-client/src/Logo.png" />
+</p>
+
+## Overview
+<p align="center">
+<img  src="https://github.com/Senthuran100/AdaptiveLogin/blob/main/login-app-client/src/LitReview_Architecture_PIC.png" />
 </p>
 
 ## Steps to Setup the Spring Boot Back end app (login-app-server)
