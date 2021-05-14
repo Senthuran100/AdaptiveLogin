@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 import com.example.login.model.UserLoginParam;
+import com.example.login.model.browserObject;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -57,7 +58,7 @@ public class BatchConfiguration {
         // query to select all the fields
 //        reader.setSql("SELECT username,datetime,browser,location,mouseevent,keyboardevent,browser_info FROM user_login_params");
         // query to select only the mouse event and keyboard event
-        reader.setSql("SELECT username,keyboardevent,mouseevent FROM user_login_params where id > 162");
+        reader.setSql("SELECT browser FROM user_login_params where id > 162");
         reader.setRowMapper(new UserRowMapper());
 
         return reader;
@@ -68,13 +69,14 @@ public class BatchConfiguration {
         @Override
         public UserLoginParam mapRow(ResultSet rs, int rowNum) throws SQLException {
             UserLoginParam user = new UserLoginParam();
-            user.setUsername(rs.getString("username"));
+//            user.setUsername(rs.getString("username"));
 //            user.setDatetime(rs.getDate("datetime"));
-//            user.setBrowser(rs.getString("browser"));
+            user.setBrowser(rs.getString("browser"));
 //            user.setLocation(rs.getString("location"));
-            user.setMouseevent(rs.getString("mouseevent"));
-            user.setKeyboardevent(rs.getString("keyboardevent"));
-//            user.setBrowser_info(rs.getString("browser_info"));
+//            user.setMouseevent(rs.);
+//            user.setKeyboardevent(rs.getString("browser_info"));
+//            user.setBrowser_info( rs.getString("browser_info"));
+//            user.getBrowser(rs.getString("browser"));
             return user;
         }
 
@@ -89,22 +91,20 @@ public class BatchConfiguration {
     public FlatFileItemWriter<UserLoginParam> writer(){
         FlatFileItemWriter<UserLoginParam> writer = new FlatFileItemWriter<UserLoginParam>();
 //        writer.setResource(new ClassPathResource("LoginParam.csv"));
-        writer.setResource(new ClassPathResource("KeyboardEvent.csv"));
+        writer.setResource(new ClassPathResource("BrowserInfo.csv"));
         writer.setLineAggregator(new DelimitedLineAggregator<UserLoginParam>() {{
             setDelimiter(",");
             setFieldExtractor(new BeanWrapperFieldExtractor<UserLoginParam>() {{
                 // set all the fields.
 //                setNames(new String[] { "username", "datetime","browser","location","mouseevent","keyboardevent","browser_info" });
                 // set only the keyboard and mouse events
-                setNames(new String[] { "username", "datetime","mouseevent","keyboardevent" });
+                setNames(new String[] { "browser" });
 
             }});
         }});
 
         return writer;
     }
-
-
 
     @Bean
     public Step step1() {

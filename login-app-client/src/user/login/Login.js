@@ -138,8 +138,8 @@ class LoginForm extends Component {
             "CPU": windowClient.getCPU(), "Device": windowClient.getDevice(), "browser": windowClient.getBrowser(),
             "SoftwareVersion": windowClient.getSoftwareVersion(), "Resolution": windowClient.getAvailableResolution(),
             "ColorDepth": windowClient.getColorDepth(), "browserVersion": windowClient.getBrowserVersion(), "OS": windowClient.getOS(),
-            "OS version": windowClient.getOSVersion(), "Engine": windowClient.getEngine(), "EngineVersion": windowClient.getEngineVersion(),
-            "canvasFingerPrint": canvasFingerPrint, ...this.generateBrowserHash()
+            "OS_version": windowClient.getOSVersion(),"Flash":windowClient.isFlash() && windowClient.getFlashVersion(), "Engine": windowClient.getEngine(), 
+            "EngineVersion": windowClient.getEngineVersion(),"canvasFingerPrint": canvasFingerPrint, ...this.generateBrowserHash()
         }
 
     }
@@ -201,15 +201,16 @@ class LoginForm extends Component {
         event.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-
+                const {CPU,TimeZone,Resolution,ColorDepth,Flash,UserAgent} = browserInfo;
+                const {country_code,country_name,state,city} = this.state.details;
                 if (browser) {
-                    values.browser = browser;
+                    values.browser = {...browser,CPU,TimeZone,Resolution,ColorDepth,Flash,
+                        UserAgent,country_code,country_name,state,city};
                     values.location = this.state.details;
                 }
                 dwellTimeSum = arraySum(dwellTimesArray, 'dwellTime')
                 flightTimesSum = arraySum(flightTimesArray, 'flightTime')
                 upDownTimeSum = arraySum(upDownTimeArray, 'upDownTime')
-                console.log('senthuran11', dwellTimeSum / dwellTimesArray.length, flightTimesSum / flightTimesArray.length, upDownTimeSum / upDownTimeArray.length);
 
                 const mouseEvent = {
                     "maxPositiveAcc": maxPositiveAcc,
