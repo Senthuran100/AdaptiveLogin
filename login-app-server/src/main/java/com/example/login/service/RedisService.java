@@ -19,18 +19,22 @@ public class RedisService {
     @Autowired
     private UserFingerprintRepo userFingerprintRepo;
 
-    public void checkUserInfo(Long userID, String username, Long CanvasFingerprint, Long BrowserFingerprint, Long DeviceFingerprint) {
+    public String checkUserInfo(Long userID, String username, Long CanvasFingerprint, Long BrowserFingerprint, Long DeviceFingerprint) {
         if (userFingerprintRepo.findFingerprintByUsername(username) != null) {
             logger.info("Username found in redis");
             if (!userFingerprintRepo.findFingerprintByUsername(username).getDeviceFingerprint().contains(DeviceFingerprint.toString()) ||
                     !userFingerprintRepo.findFingerprintByUsername(username).getCanvasFingerprint().contains(CanvasFingerprint.toString()) ||
                     !userFingerprintRepo.findFingerprintByUsername(username).getBrowserFingerprint().contains(BrowserFingerprint.toString())) {
-                
+                UserFingerprint userFingerprint = userFingerprintRepo.findFingerprintByUsername(username);
+                userFingerprint.getCanvasFingerprint().add(CanvasFingerprint.toString());
+                userFingerprint.getDeviceFingerprint().add(DeviceFingerprint.toString());
+                userFingerprint.getBrowserFingerprint().add(BrowserFingerprint.toString());
 
+                userFingerprintRepo.save(userFingerprint);
+                return "Fingerprint Doesn't Exsist";
             }
-
+            return "Fingerprint Exsist";
         } else {
-
             Set<String> canvasFingerprint = new HashSet<String>();
             Set<String> browserFingerprint = new HashSet<String>();
             Set<String> deviceFingerprint = new HashSet<String>();
@@ -42,6 +46,7 @@ public class RedisService {
             UserFingerprint userFingerprint = new UserFingerprint(userID, username, canvasFingerprint, browserFingerprint, deviceFingerprint);
             userFingerprintRepo.save(userFingerprint);
             logger.info("Data inserted in Redis Cache");
+            return "Fingerprint inserted in Redis Cache";
         }
     }
 

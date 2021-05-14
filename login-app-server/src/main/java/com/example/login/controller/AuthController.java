@@ -97,7 +97,9 @@ public class AuthController {
                     loginRequest.getLocation().toString(), loginRequest.getMouseEvent().toString(), loginRequest.getKeyBoardEvent().toString(), loginRequest.getBrowserInfo().toString());
             userLoginParamRepo.save(userLoginParam);
             browserObject browserObject = (com.example.login.payload.browserObject) loginRequest.getBrowserInfo();
-            redisService.checkUserInfo(user.getId(), user.getUsername(), browserObject.getCanvasFingerPrint(), browserObject.getBrowserAttribute(), browserObject.getDeviceAttribute());
+            String redisServiceInfo = redisService.checkUserInfo(user.getId(), user.getUsername(), browserObject.getCanvasFingerPrint(),
+                    browserObject.getBrowserAttribute(), browserObject.getDeviceAttribute());
+            logger.info("==== redisServiceInfo ===="+redisServiceInfo);
             logger.info("==== browserInfo ====" + browserObject.getBrowserAttribute() + " " + browserObject.getCanvasFingerPrint() + " " + browserObject.getDeviceAttribute());
             if (authenticationMethod.equals("OTP")) {
                 return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", authenticationMethod, user.getUsername()));
