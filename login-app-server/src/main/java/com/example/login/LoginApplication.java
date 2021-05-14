@@ -2,7 +2,6 @@ package com.example.login;
 
 import com.example.login.model.UserFingerprint;
 import com.example.login.repository.UserFingerprintRepo;
-import com.example.login.service.EmailSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -73,7 +72,8 @@ public class LoginApplication {
 
 
         System.out.println(userFingerprintRepo.findAll());
-//        service.sendSimpleEmail("senthuran.manoharan@gmail.com", "Hello", "Hello world");
-//        service.generateCode("senthuran.manoharan@gmail.com");
+        System.out.println("111"+userFingerprintRepo.findProductById(3));
+
+        System.out.println("findFingerprintByUsername"+ userFingerprintRepo.findFingerprintByUsername("ABC1").getDeviceFingerprint());
     }
 }

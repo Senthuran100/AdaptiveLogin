@@ -28,6 +28,7 @@ public class UserFingerprintRepo {
         return (UserFingerprint) template.opsForHash().get(HASH_KEY,id);
     }
 
+    public UserFingerprint findFingerprintByUsername(String username){ return (UserFingerprint) template.opsForHash().get(HASH_KEY,username);}
 
     public String deleteProduct(int id){
         template.opsForHash().delete(HASH_KEY,id);
