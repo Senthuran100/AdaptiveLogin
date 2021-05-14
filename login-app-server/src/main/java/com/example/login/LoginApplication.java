@@ -75,6 +75,6 @@ public class LoginApplication {
         System.out.println("111"+userFingerprintRepo.findProductById(3));
         System.out.println("findFingerprintByUsername"+ userFingerprintRepo.findFingerprintByUsername("ABssC1"));
 
-        System.out.println("findFingerprintByUsername"+ userFingerprintRepo.findFingerprintByUsername("ABC1").getDeviceFingerprint());
+        System.out.println("findFingerprintByUsername"+ userFingerprintRepo.findFingerprintByUsername("senthuran").getDeviceFingerprint());
     }
 }
