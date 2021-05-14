@@ -16,7 +16,7 @@ import java.util.Set;
 @RedisHash("UserFingerprint")
 public class UserFingerprint implements Serializable {
     @Id
-    private int id;
+    private Long id;
     private String username;
     private Set<String> canvasFingerprint = new HashSet<String>();
     private Set<String> browserFingerprint = new HashSet<String>();

@@ -61,9 +61,9 @@ public class LoginApplication {
         Set<String> hs = new HashSet<String>();
         hs.add("12345677");
         hs.add("7839930003");
-        UserFingerprint userFingerprint=new UserFingerprint(2,"ABC", hs,hs,hs);
-        UserFingerprint userFingerprint1=new UserFingerprint(2,"ABC1", hs,hs,hs);
-        UserFingerprint userFingerprint3=new UserFingerprint(3,"ABC1", hs,hs,hs);
+        UserFingerprint userFingerprint=new UserFingerprint(2L,"ABC", hs,hs,hs);
+        UserFingerprint userFingerprint1=new UserFingerprint(2L,"ABC1", hs,hs,hs);
+        UserFingerprint userFingerprint3=new UserFingerprint(3L,"ABC1", hs,hs,hs);
 
 
         userFingerprintRepo.save(userFingerprint);
@@ -73,6 +73,7 @@ public class LoginApplication {
 
         System.out.println(userFingerprintRepo.findAll());
         System.out.println("111"+userFingerprintRepo.findProductById(3));
+        System.out.println("findFingerprintByUsername"+ userFingerprintRepo.findFingerprintByUsername("ABssC1"));
 
         System.out.println("findFingerprintByUsername"+ userFingerprintRepo.findFingerprintByUsername("ABC1").getDeviceFingerprint());
     }

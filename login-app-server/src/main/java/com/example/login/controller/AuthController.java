@@ -14,6 +14,7 @@ import com.example.login.repository.UserRepository;
 import com.example.login.security.JwtTokenProvider;
 
 import com.example.login.service.EmailSenderService;
+import com.example.login.service.RedisService;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,9 @@ public class AuthController {
     @Autowired
     private EmailSenderService service;
 
+    @Autowired
+    private RedisService redisService;
+
     public String authenticationMethod = "normal";  // security_question  OTP   normal
 
     @PostMapping("/signin")
@@ -93,7 +97,8 @@ public class AuthController {
                     loginRequest.getLocation().toString(), loginRequest.getMouseEvent().toString(), loginRequest.getKeyBoardEvent().toString(), loginRequest.getBrowserInfo().toString());
             userLoginParamRepo.save(userLoginParam);
             browserObject browserObject = (com.example.login.payload.browserObject) loginRequest.getBrowserInfo();
-            logger.info("====browserInfo ====" + browserObject.getBrowserAttribute() + " " + browserObject.getCanvasFingerPrint() + " " + browserObject.getDeviceAttribute());
+            redisService.checkUserInfo(user.getId(), user.getUsername(), browserObject.getCanvasFingerPrint(), browserObject.getBrowserAttribute(), browserObject.getDeviceAttribute());
+            logger.info("==== browserInfo ====" + browserObject.getBrowserAttribute() + " " + browserObject.getCanvasFingerPrint() + " " + browserObject.getDeviceAttribute());
             if (authenticationMethod.equals("OTP")) {
                 return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", authenticationMethod, user.getUsername()));
             } else if (authenticationMethod.equals("security_question")) {
