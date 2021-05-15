@@ -13,6 +13,7 @@ import com.example.login.repository.UserLoginParamRepo;
 import com.example.login.repository.UserRepository;
 import com.example.login.security.JwtTokenProvider;
 
+import com.example.login.service.AdaptiveAuthService;
 import com.example.login.service.EmailSenderService;
 import com.example.login.service.RedisService;
 import org.json.JSONException;
@@ -67,6 +68,9 @@ public class AuthController {
     @Autowired
     private RedisService redisService;
 
+    @Autowired
+    private AdaptiveAuthService adaptiveAuthService;
+
     public String authenticationMethod = "normal";  // security_question  OTP   normal
 
     @PostMapping("/signin")
@@ -99,7 +103,7 @@ public class AuthController {
             browserObject browserObject = (com.example.login.payload.browserObject) loginRequest.getBrowserInfo();
             String redisServiceInfo = redisService.checkUserInfo(user.getId(), user.getUsername(), browserObject.getCanvasFingerPrint(),
                     browserObject.getBrowserAttribute(), browserObject.getDeviceAttribute());
-            logger.info("==== redisServiceInfo ==== " + redisServiceInfo);
+            logger.info("==== redisServiceInfo ==== " + redisServiceInfo + adaptiveAuthService.getUserRiskProfile());
             logger.info("==== browserInfo ==== " + browserObject.getBrowserAttribute() + " ++ " + browserObject.getCanvasFingerPrint() + " ++ " + browserObject.getDeviceAttribute());
             if (authenticationMethod.equals("OTP")) {
                 return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", authenticationMethod, user.getUsername()));

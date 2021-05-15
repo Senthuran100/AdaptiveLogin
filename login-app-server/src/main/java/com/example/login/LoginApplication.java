@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import com.example.login.model.Role;
 import com.example.login.model.RoleName;
 
 import javax.annotation.PostConstruct;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
@@ -20,6 +22,11 @@ import com.example.login.repository.RoleRepository;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
 
 import javax.mail.MessagingException;
 
@@ -52,6 +59,11 @@ public class LoginApplication {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
 
+    @Bean
+    public RestTemplate getRestTemplate() {
+        return new RestTemplate();
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(LoginApplication.class, args);
     }
@@ -72,9 +84,8 @@ public class LoginApplication {
 
 
         System.out.println(userFingerprintRepo.findAll());
-        System.out.println("111"+userFingerprintRepo.findProductById(3));
-        System.out.println("findFingerprintByUsername"+ userFingerprintRepo.findFingerprintByUsername("ABssC1"));
 
-        System.out.println("findFingerprintByUsername"+ userFingerprintRepo.findFingerprintByUsername("senthuran").getDeviceFingerprint());
     }
+
+
 }

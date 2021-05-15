@@ -59,7 +59,7 @@ public class BatchConfiguration {
         // query to select all the fields
 //        reader.setSql("SELECT username,datetime,browser,location,mouseevent,keyboardevent,browser_info FROM user_login_params");
         // query to select only the mouse event and keyboard event
-        reader.setSql("SELECT username,mouseevent,keyboardevent FROM user_login_params where id > 162");
+        reader.setSql("SELECT username,browser FROM user_login_params where id > 162");
         reader.setRowMapper(new UserRowMapper());
 
         return reader;
@@ -74,10 +74,10 @@ public class BatchConfiguration {
 //            user.setDatetime(rs.getDate("datetime"));
 //            user.setBrowser(rs.getString("browser"));
 //            user.setLocation(rs.getString("location"));
-            user.setMouseevent(rs.getString("mouseevent"));
-            user.setKeyboardevent(rs.getString("keyboardevent"));
+//            user.setMouseevent(rs.getString("browser"));
+//            user.setKeyboardevent(rs.getString("keyboardevent"));
 //            user.setBrowser_info( rs.getString("browser_info"));
-//            user.getBrowser(rs.getString("browser"));
+            user.setBrowser(rs.getString("browser"));
             return user;
         }
 
@@ -92,14 +92,14 @@ public class BatchConfiguration {
     public FlatFileItemWriter<UserLoginParam> writer() {
         FlatFileItemWriter<UserLoginParam> writer = new FlatFileItemWriter<UserLoginParam>();
 //        writer.setResource(new ClassPathResource("LoginParam.csv"));
-        writer.setResource(new ClassPathResource("KeyboardEvent.csv"));
+        writer.setResource(new ClassPathResource("BrowserInfo.csv"));
         writer.setLineAggregator(new DelimitedLineAggregator<UserLoginParam>() {{
             setDelimiter(",");
             setFieldExtractor(new BeanWrapperFieldExtractor<UserLoginParam>() {{
                 // set all the fields.
 //                setNames(new String[] { "username", "datetime","browser","location","mouseevent","keyboardevent","browser_info" });
                 // set only the keyboard and mouse events
-                setNames(new String[]{"username","mouseevent","keyboardevent"});
+                setNames(new String[]{"username","browser"});
 
             }});
         }});
