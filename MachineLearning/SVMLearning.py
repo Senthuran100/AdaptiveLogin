@@ -3,11 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.multiclass import OneVsRestClassifier
 
-keyboard = pd.read_csv("/home/senthuran/Desktop/Movies/Keyboard.csv")
+keyboard = pd.read_csv("/home/senthuran/Desktop/Movies/BrowserInfo.csv")
 print(keyboard.shape)
 print(keyboard.head())
-X = keyboard.drop('user', axis=1)
-y = keyboard['user']
+X = keyboard.drop('username', axis=1)
+y = keyboard['username']
 
 from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.20)
