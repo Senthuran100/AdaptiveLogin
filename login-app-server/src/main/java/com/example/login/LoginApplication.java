@@ -13,7 +13,6 @@ import com.example.login.model.Role;
 import com.example.login.model.RoleName;
 
 import javax.annotation.PostConstruct;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
@@ -22,10 +21,6 @@ import com.example.login.repository.RoleRepository;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
 import javax.mail.MessagingException;
@@ -83,9 +78,8 @@ public class LoginApplication {
         userFingerprintRepo.save(userFingerprint3);
 
 
-        System.out.println(userFingerprintRepo.findAll());
+        System.out.println("===userFingerprintRepo==="+userFingerprintRepo.findAll());
 
     }
-
 
 }
