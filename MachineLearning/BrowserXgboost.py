@@ -31,6 +31,7 @@ y_pred = model.predict(X_test)
 y_pred_prob = model.predict_proba(X_test)
 print(y_pred)
 print(y_pred_prob)
+print("HEllo",model.classes_)
 
 print(confusion_matrix(y_test,y_pred))
 print(classification_report(y_test,y_pred))
