@@ -21,9 +21,8 @@ model.fit(X_train, y_train)
 filename = 'MouseKey.sav'
 pickle.dump(model, open(filename, 'wb'))
 
-new_input=[7247,-8857,886,1029,642,1340.513905,6,0,3,3,0.003121452894,2.63E-03,7715,1,0,23,79.73913043,348,205.9047619];
+new_input= pd.DataFrame({"maxPositiveAcc":[7247], "maxNegativeAcc":[-8857], "maxSpeed":[886], "totalX":[1029], "totalY":[642], "total":[1340.513905],"leftClick": [6], "rightClick":[0], "mouseDown":[3], "mouseUp":[3], "usernameWPS":[0.003121452894], "passwordWPS":[2.63E-03], "totalTimeSpent":[7715], "countShift":[1],"countCapslock":[0],"countKey":[23], "dwellTimeAverage":[79.73913043], "flightTimesAverage":[348], "upDownTimeAverage":[205.9047619]})
 
-print("X Test ",X_test)
 print(X_test)
 y_pred = model.predict(X_test)
 
@@ -36,7 +35,7 @@ print(classification_report(y_test,y_pred))
 
 print(accuracy_score(y_test,y_pred)*100)
 
-print(model.predict(new_input))
+print(model.predict_proba(new_input))
 
 
 
