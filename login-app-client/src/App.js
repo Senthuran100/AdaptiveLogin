@@ -51,7 +51,7 @@ class App extends Component {
   }
   componentDidMount() {
     if (localStorage.getItem('user') && localStorage.getItem(ACCESS_TOKEN)) {
-      console.log(JSON.parse(localStorage.getItem('user')));
+      // console.log(JSON.parse(localStorage.getItem('user')));
       this.setState({
         currentUser: JSON.parse(localStorage.getItem('user')),
         isAuthenticated: true,
@@ -166,7 +166,6 @@ class App extends Component {
   }
 
   render() {
-    console.log('authen', this.state.isAuthenticated, this.state.currentUser);
     return (
       <Layout className="app-container" onMouseDown={this.handleEvent} onMouseUp={this.handleEvent} onMouseMove={this.handleEvent}>
         <AppHeader isAuthenticated={this.state.isAuthenticated}

@@ -5,8 +5,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, precision_score,recall_score,f1_score
 from sklearn.metrics import classification_report, confusion_matrix
 import pickle
+from sklearn.neighbors import KNeighborsClassifier
+
 # from sklearn.svm import SVC
-from sklearn.linear_model import LogisticRegression
 
 keyboard = pd.read_csv("/home/senthuran/Desktop/Movies/MouseKey.csv")
 print(keyboard.shape)
@@ -16,7 +17,7 @@ y = keyboard['username']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.20)
 
-model = OneVsRestClassifier(LogisticRegression(random_state = 0))
+model = OneVsRestClassifier(KNeighborsClassifier())
 model.fit(X_train, y_train)
 
 # save the model to disk
@@ -39,12 +40,12 @@ print(accuracy_score(y_test,y_pred)*100)
 
 print(model.predict_proba(new_input))
 
-precision = precision_score(y_test, y_pred, average='binary')
-recall = recall_score(y_test, y_pred, average='binary')
-score = f1_score(y_test, y_pred, average='binary')
-
-print('Recall: %.3f' % recall)
-print('F-Measure: %.3f' % score)
+# precision = precision_score(y_test, y_pred, average='binary')
+# recall = recall_score(y_test, y_pred, average='binary')
+# score = f1_score(y_test, y_pred, average='binary')
+#
+# print('Recall: %.3f' % recall)
+# print('F-Measure: %.3f' % score)
 
 
 

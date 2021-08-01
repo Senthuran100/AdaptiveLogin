@@ -130,7 +130,7 @@ class LoginForm extends Component {
         if (!!(element.getContext && element.getContext('2d'))) {
             canvasFingerPrint = this.canvasFingerPrint();
         }
-        console.log('canvasFingerPrint', canvasFingerPrint, this.generateBrowserHash());
+        // console.log('canvasFingerPrint', canvasFingerPrint, this.generateBrowserHash());
         browserInfo = {
             "UserAgent": windowClient.getUserAgentLowerCase(), "Plugins": windowClient.getPlugins(),
             "TimeZone": windowClient.getTimeZone(), "Fonts": windowClient.getFonts(), "MimeTypes": windowClient.getMimeTypes(),
@@ -158,7 +158,7 @@ class LoginForm extends Component {
     }
 
     onKeyPressed(e) {
-        console.log(e.key);
+        // console.log(e.key);
         if (!dwellTimes[e.which])
             dwellTimes[e.which] = new Date().getTime();
         if (!start) {
@@ -167,13 +167,13 @@ class LoginForm extends Component {
             let flighttime = new Date().getTime() - start;
             start = null
             flightTimesArray.push({ "key": e.key, "flightTime": flighttime })
-            console.log('FlightTime', flightTimesArray, arraySum(flightTimesArray, 'flightTime'));
+            // console.log('FlightTime', flightTimesArray, arraySum(flightTimesArray, 'flightTime'));
         }
         if (startTime) {
             let upDownTime = new Date().getTime() - startTime;
             startTime = null;
             upDownTimeArray.push({ 'key': e.key, 'upDownTime': upDownTime })
-            console.log('upDownTimeArray', upDownTimeArray, arraySum(upDownTimeArray, 'upDownTime'));
+            // console.log('upDownTimeArray', upDownTimeArray, arraySum(upDownTimeArray, 'upDownTime'));
         }
         if (e.key === 'CapsLock') {
             countCapslock++;
@@ -185,7 +185,7 @@ class LoginForm extends Component {
     }
     onKeyRelease(e) {
 
-        console.log(e.key);
+        // console.log(e.key);
         let dwellTime = new Date().getTime() - dwellTimes[e.which];
 
         dwellTimesArray.push({ "key": e.key, "dwellTime": dwellTime })
@@ -234,7 +234,7 @@ class LoginForm extends Component {
                 values.keyBoardEvent = keyBoardEvent
                 values.browserInfo = browserInfo
                 const loginRequest = Object.assign({}, values);
-                console.log('values', loginRequest);
+                // console.log('values', loginRequest);
                 this.setState({ isLoading: true })
                 login(loginRequest)
                     .then(response => {
@@ -278,7 +278,6 @@ class LoginForm extends Component {
         }
         if (endTimeUsername !== 0 && startTimeUsername !== 0) {
             timeDiffUsername = endTimeUsername - startTimeUsername;
-            console.log('timeDiffUsername', timeDiffUsername);
             usernameWPS = usernameCount / timeDiffUsername;
         }
     }
@@ -306,7 +305,6 @@ class LoginForm extends Component {
 
 
     render() {
-        console.log('sampleee', this.state.startTimeUsername, this.state.usernameCount, this.state.endTimeUsername);
         const { getFieldDecorator } = this.props.form;
         return (
             <Form onSubmit={this.handleSubmit} className="login-form" onMouseDown={this.handleEvent} onMouseUp={this.handleEvent} >

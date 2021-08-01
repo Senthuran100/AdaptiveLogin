@@ -16,7 +16,6 @@ import com.example.login.security.JwtTokenProvider;
 import com.example.login.service.AdaptiveAuthService;
 import com.example.login.service.EmailSenderService;
 import com.example.login.service.RedisService;
-import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,14 +72,15 @@ public class AuthController {
 
     public String authenticationMethod = "normal";  // security_question  OTP   normal
 
+    @GetMapping("/test")
+    public String testApp() {
+        return "Test Endpoint";
+    }
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        logger.info("--- loginRequest browser ----" + loginRequest.getBrowser());
-        logger.info("--- loginRequest location ---" + loginRequest.getLocation());
-        logger.info("--- loginRequest mouseEvent ---" + loginRequest.getMouseEvent());
-        logger.info("--- loginRequest keyBoardEvent ---" + loginRequest.getKeyBoardEvent());
-        logger.info("--- loginRequest BrowserInfo-" + loginRequest.getBrowserInfo());
 
+        // Standard Authentication
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsernameOrEmail(),
@@ -101,16 +101,61 @@ public class AuthController {
                     loginRequest.getLocation().toString(), loginRequest.getMouseEvent().toString(), loginRequest.getKeyBoardEvent().toString(), loginRequest.getBrowserInfo().toString());
             userLoginParamRepo.save(userLoginParam);
             browserObject browserObject = (com.example.login.payload.browserObject) loginRequest.getBrowserInfo();
+
+            long start = System.currentTimeMillis();
+            // Check whether fingerprint exsist in redis cache.
             String redisServiceInfo = redisService.checkUserInfo(user.getId(), user.getUsername(), browserObject.getCanvasFingerPrint(),
                     browserObject.getBrowserAttribute(), browserObject.getDeviceAttribute());
-            logger.info("==== redisServiceInfo ==== " + redisServiceInfo + adaptiveAuthService.getUserRiskProfile());
-            logger.info("==== browserInfo ==== " + browserObject.getBrowserAttribute() + " ++ " + browserObject.getCanvasFingerPrint() + " ++ " + browserObject.getDeviceAttribute());
+            long finish = System.currentTimeMillis();
+            long timeElapsed = finish - start;
+            logger.info("=== timeElapsed ===" + timeElapsed);
+
+            Double userBrowserProbability = 0.0;
+
+            long start1 = System.currentTimeMillis();
+            // Calling the first machine learning model in python server.
+            Double userDynmaicsProbability = adaptiveAuthService.postUserDynamics(loginRequest.getMouseEvent().toString(), loginRequest.getKeyBoardEvent().toString(),
+                    loginRequest.getUsernameOrEmail().toString());
+            long finish1 = System.currentTimeMillis();
+            long timeElapsed1= finish1 - start1;
+            logger.info("=== timeElapsed1 ===" + timeElapsed1);
+
+            if (!redisServiceInfo.equals("Fingerprint Exsist")) {
+                long start2 = System.currentTimeMillis();
+                // Calling the second machine learning model in python server.
+                userBrowserProbability = adaptiveAuthService.postUserBrowserInfo(loginRequest.getBrowser().toString(), loginRequest.getUsernameOrEmail().toString());
+                logger.info("=== userBrowserProbability ===" + userBrowserProbability);
+                long finish2 = System.currentTimeMillis();
+                long timeElapsed2= finish2 - start2;
+                logger.info("=== timeElapsed2 ===" + timeElapsed2);
+
+            } else {
+                userBrowserProbability = 100.0;
+                logger.info("=== userBrowserProbability ===" + 100.00);
+            }
+            long finish3 = System.currentTimeMillis();
+            long timeElapsed3= finish3 - start;
+            logger.info("=== timeElapsed 3 ===" + timeElapsed3);
+
+            // Calculate the netProbability and check the method of authentication.
+            Double netProbability = (userDynmaicsProbability + userBrowserProbability) / 2;
+            logger.info("=== netProbability ===" + netProbability);
+            if (netProbability >= 80)
+                authenticationMethod = "normal";
+            else if (netProbability >= 50 && netProbability < 80)
+                authenticationMethod = "security_question";
+            else
+                authenticationMethod = "OTP";
+
+//            logger.info("==== redisServiceInfo ==== " + redisServiceInfo);
+//            logger.info("==== browserInfo ==== " + browserObject.getBrowserAttribute() + " ++ " + browserObject.getCanvasFingerPrint() + " ++ " + browserObject.getDeviceAttribute());
+
             if (authenticationMethod.equals("OTP")) {
                 return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", authenticationMethod, user.getUsername()));
             } else if (authenticationMethod.equals("security_question")) {
                 return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", authenticationMethod, user.getUsername()));
             } else {
-                return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", "normal", user.getUsername()));
+                return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, "Event is Stored", authenticationMethod, user.getUsername()));
             }
         }
 

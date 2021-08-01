@@ -48,11 +48,9 @@ class Signup extends Component {
     }
 
     handleInputChange(event, validationFun) {
-        // console.log('event', event, event.target);
         const target = event.target;
         const inputName = target.name;
         const inputValue = target.value;
-        console.log('event11', inputName, inputValue);
 
         this.setState({
             [inputName]: {
@@ -63,7 +61,7 @@ class Signup extends Component {
     }
 
     handleSecurityQuestion = (event) => {
-        console.log('ec', event);
+        // console.log('ec', event);
         this.setState({ question: { value: event } })
     }
 

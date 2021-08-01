@@ -11,14 +11,11 @@ const request = (options) => {
 
     const defaults = { headers: headers };
     options = Object.assign({}, defaults, options);
-    console.log('hello1111');
 
     return fetch(options.url, options)
         .then(response => {
-            console.log('hello222');
 
             return response.json().then(json => {
-                console.log('hello');
                 if (!response.ok) {
                     return Promise.reject(json);
                 }

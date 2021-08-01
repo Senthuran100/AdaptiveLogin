@@ -23,7 +23,7 @@ class LoginHome extends Component {
             _this.setState({
                 isLoading: true
             });
-            console.log('username', username);
+            // console.log('username', username);
             getUserProfile(username)
                 .then(response => {
                     localStorage.setItem("user", JSON.stringify(response));
@@ -44,14 +44,13 @@ class LoginHome extends Component {
                         });
                     }
                 });
-            console.log('username', username);
+            // console.log('username', username);
 
         }
     }
 
     componentDidMount() {
         const username = this.props.match.params.username;
-        console.log('username', username);
         this.loadUserProfile(username);
     }
 

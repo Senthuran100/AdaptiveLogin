@@ -19,6 +19,7 @@ public class RedisService {
     @Autowired
     private UserFingerprintRepo userFingerprintRepo;
 
+    // Method used to check if the fingerprint exsist in the redis cache.
     public String checkUserInfo(Long userID, String username, Long CanvasFingerprint, Long BrowserFingerprint, Long DeviceFingerprint) {
         if (userFingerprintRepo.findFingerprintByUsername(username) != null) {
             logger.info("Username found in redis");

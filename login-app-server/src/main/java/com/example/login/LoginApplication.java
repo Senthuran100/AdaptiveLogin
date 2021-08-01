@@ -1,14 +1,14 @@
 package com.example.login;
 
-import com.example.login.model.UserFingerprint;
-import com.example.login.repository.UserFingerprintRepo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
-
+//import com.example.login.model.UserFingerprint;
+//import com.example.login.repository.UserFingerprintRepo;
 import com.example.login.model.Role;
 import com.example.login.model.RoleName;
 
@@ -34,8 +34,8 @@ public class LoginApplication {
     @Autowired
     RoleRepository roleRepository;
 
-    @Autowired
-    private UserFingerprintRepo userFingerprintRepo;
+//    @Autowired
+//    private UserFingerprintRepo userFingerprintRepo;
 
     @PostConstruct
     void init() {
@@ -63,23 +63,20 @@ public class LoginApplication {
         SpringApplication.run(LoginApplication.class, args);
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void triggerMail() throws MessagingException {
-        Set<String> hs = new HashSet<String>();
-        hs.add("12345677");
-        hs.add("7839930003");
-        UserFingerprint userFingerprint=new UserFingerprint(2L,"ABC", hs,hs,hs);
-        UserFingerprint userFingerprint1=new UserFingerprint(2L,"ABC1", hs,hs,hs);
-        UserFingerprint userFingerprint3=new UserFingerprint(3L,"ABC1", hs,hs,hs);
-
-
-        userFingerprintRepo.save(userFingerprint);
-        userFingerprintRepo.save(userFingerprint1);
-        userFingerprintRepo.save(userFingerprint3);
-
-
-        System.out.println("===userFingerprintRepo==="+userFingerprintRepo.findAll());
-
-    }
+//    @EventListener(ApplicationReadyEvent.class)
+//    public void triggerMail() throws MessagingException {
+//        Set<String> hs = new HashSet<String>();
+//        hs.add("12345677");
+//        hs.add("7839930003");
+//        UserFingerprint userFingerprint=new UserFingerprint(2L,"ABC", hs,hs,hs);
+//        UserFingerprint userFingerprint1=new UserFingerprint(2L,"ABC1", hs,hs,hs);
+//        UserFingerprint userFingerprint3=new UserFingerprint(3L,"ABC1", hs,hs,hs);
+//
+//
+//        userFingerprintRepo.save(userFingerprint);
+//        userFingerprintRepo.save(userFingerprint1);
+//        userFingerprintRepo.save(userFingerprint3);
+//
+//    }
 
 }

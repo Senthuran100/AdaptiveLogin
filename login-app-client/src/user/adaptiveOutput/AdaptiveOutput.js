@@ -29,7 +29,7 @@ class AdaptiveOutput extends Component {
 
     componentDidMount() {
         const username = this.props.username;
-        console.log('username', username);
+        // console.log('username', username);
         this.setState({ authfactor: localStorage.getItem(AUTHFACTOR) });
         if (localStorage.getItem(AUTHFACTOR) === 'OTP') {
             generateOTPCode({ username: localStorage.getItem(USERNAME) })
@@ -53,7 +53,6 @@ class AdaptiveOutput extends Component {
         const target = event.target;
         const inputName = target.name;
         const inputValue = target.value;
-        console.log('event11', inputName, inputValue);
 
         this.setState({
             [inputName]: {
@@ -66,8 +65,6 @@ class AdaptiveOutput extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
 
-        console.log('adaptiveRequest', this.props.username);
-
         const adaptiveRequest = {
             username: localStorage.getItem('username'),
             question: this.state.question.value,
@@ -78,7 +75,7 @@ class AdaptiveOutput extends Component {
 
         secondLogin(adaptiveRequest)
             .then(response => {
-                console.log('respp', response);
+                // console.log('respp', response);
 
                 if (response.message === 'Verified') {
                     this.props.onLogin();
@@ -95,7 +92,7 @@ class AdaptiveOutput extends Component {
                 });
             });
 
-        console.log('adaptiveRequest', adaptiveRequest);
+        // console.log('adaptiveRequest', adaptiveRequest);
     }
 
     validateAnswer = (amswer) => {
@@ -137,7 +134,7 @@ class AdaptiveOutput extends Component {
     }
 
     handleSecurityQuestion = (event) => {
-        console.log('ec', event);
+        // console.log('ec', event);
         this.setState({ question: { value: event } })
     }
 

@@ -1,11 +1,7 @@
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.multiclass import OneVsRestClassifier
 
-keyboard = pd.read_csv("/home/senthuran/Desktop/Movies/BrowserInfo.csv")
-print(keyboard.shape)
-print(keyboard.head())
+keyboard = pd.read_csv("/home/senthuran/Desktop/Movies/MouseKey.csv")
 X = keyboard.drop('username', axis=1)
 y = keyboard['username']
 
